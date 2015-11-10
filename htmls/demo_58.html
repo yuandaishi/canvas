@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+				    ctx=canvas.getContext("2d"),
+				    numbers=10,
+				    bounce=-1,
+				    balls=[];
+				    
+				function ball(){
+					this.x=Math.random()*1000;
+					this.y=Math.random()*500;
+					this.vx=Math.random()*10-5;
+					this.vy=Math.random()*10-5;
+					this.r=Math.random()*60+10;
+					this.R=Math.ceil(Math.random()*255);
+					this.G=Math.ceil(Math.random()*255);
+					this.B=Math.ceil(Math.random()*255);	
+				};
+				
+				ball.prototype.draw=function(ctx){
+					ctx.save();
+					this.x+=this.vx;
+					this.y+=this.vy;
+					if(this.x>canvas.width-this.r){
+						this.x = 1000- this.r;
+						this.vx*=bounce;
+					}else if(this.x<this.r){
+						this.x = this.r;
+						this.vx*=bounce;
+					}
+					if(this.y>canvas.height-this.r){
+						this.y = 500- this.r;
+						this.vy*=bounce;
+					}else if(this.y<this.r){
+						this.y =this.r;
+						this.vy*=bounce;
+					}
+					ctx.beginPath();
+					ctx.arc(this.x,this.y,this.r,0,Math.PI*2,true);
+					fillstyle=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+					fillstyle.addColorStop(0,"rgb("+this.R+","+this.G+","+this.B+")");
+					fillstyle.addColorStop(1,"rgb(60,60,60)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+				}
+					
+				
+				
+				for(i=0;i<numbers;i++){
+					Ball=new ball();
+					balls.push(Ball);
+				};
+				
+				function drawBall(ball){
+					ball.draw(ctx);	
+				};
+				
+				(function draw(){
+					con=window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					balls.forEach(drawBall);
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

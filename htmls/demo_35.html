@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				ctx.arc(500,250,50,0,Math.PI*2,true);
+				ctx.fillStyle="#015C88";
+				ctx.fill();
+				$("#canvas").mousemove(function(e){
+					 x=e.offsetX-500;
+					 y=e.offsetY-250;
+					//console.log(x);
+//					var angle=Math.atan2(y,x);
+//					var a=Math.sin(angle);
+//					var b=Math.cos(angle);
+					 m=x*x+y*y;
+					if(m<2500){
+						//console.log(true);
+						$("#box").val("鼠标在圆内");
+						$("#box").css({
+							color:"red",
+						})
+					}else{
+						//console.log(false);
+						$("#box").val("鼠标在圆外");
+						$("#box").css({
+							color:"blue",
+						})
+					}
+				})
+				$("#canvas").mousedown(function(){
+					console.log(m);
+					if(m<2500){
+						//console.log(true);
+						$("#box").val("鼠标在圆内点击");
+						$("#box").css({
+							color:"green",
+						})
+					}else{
+						//console.log(false);
+						$("#box").val("鼠标在圆外点击 ");
+						$("#box").css({
+							color:"grey",
+						})
+					}
+				})
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<input type="text" name="box" id="box" value="" />
+	</body>
+</html>

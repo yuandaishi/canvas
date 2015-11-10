@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1152" height="728" style="border: 1px solid #cccccc;margin: 0 auto;display: block;"></canvas>
+		<canvas id="water" width="500" height="100" style="display: none;"></canvas>
+		<input type="range" name="range" id="range" value="0.5" min="0.1" max="1" step="0.01" style="display: block;width: 500px;margin: 20px auto;"/>
+	</body>
+	<script src="jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function(){
+			var canvas=$("canvas")[0];
+			var ctx=canvas.getContext("2d");
+			var water=$("#water")[0];
+			var water_ctx=water.getContext("2d");
+			//绘制放大缩小
+			var image=new Image;
+			var scale=$("#range").val();
+			image.src="img-lg.jpg";
+			image.onload=function(){
+				draw(scale);
+				//ctx.drawImage(image,0,0,100,100);
+			}
+			$("#range").mousemove(function(){
+				scale=$("#range").val();
+				draw(scale);
+				// 
+				console.log("hhaha");
+			})
+			function draw(scale){
+				var sx=(canvas.width-image.width*scale)/2;
+				var sy=(canvas.height-image.height*scale)/2;
+				ctx.clearRect(0,0,canvas.width,canvas.height);
+				ctx.beginPath();
+				ctx.drawImage(image,sx,sy,image.width*scale,image.height*scale);
+				//把水印放置于图片合适位置
+				ctx.drawImage(water,canvas.width-water.width,canvas.height-water.height);
+			}
+			//绘制水印
+			water_ctx.font="bold 50px Arial";
+			var gradient=water_ctx.createLinearGradient(0,0,water.width,0);
+			gradient.addColorStop("0","yellow");
+			gradient.addColorStop("0.5","blue");
+			gradient.addColorStop("1","red");
+			water_ctx.fillStyle=gradient;
+			water_ctx.textBaseline="middle";
+			water_ctx.textAlign="center";
+			water_ctx.fillText("==yuandaishi==",250,50);
+		})
+	</script>
+</html>

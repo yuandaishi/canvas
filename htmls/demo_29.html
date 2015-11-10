@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var arrX=[];
+		  	var arrY=[];
+		  	var arrA=[];
+		  	var arrB=[];
+		  	var color=[];
+			//以下for语句页面加载之后只执行一次
+		  	for(i=0;i<50;i++){
+		  		var a=Math.random()*6-3;//正负均有，可以向左向右
+		  		var b=Math.random()*(-10)-20;//必须保证为负值，才能保证始终向上，-20保证向上的速度初始值不至于太小。
+		  		arrA.push(a);
+		  		arrB.push(b);
+		  		//颜色开始
+		  			var zero=Math.floor(Math.random()*15);
+		  			var one=Math.floor(Math.random()*15);
+		  			var two=Math.floor(Math.random()*15);
+		  			var three=Math.floor(Math.random()*15);
+		  			var four=Math.floor(Math.random()*15);
+		  			var five=Math.floor(Math.random()*15);
+		  			var arr=["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+		  			var ca=arr[zero];
+		  			var cb=arr[one];
+		 			var cc=arr[two];
+		  			var cd=arr[three];
+		  			var ce=arr[four];
+		  			var cf=arr[five];
+		  		//颜色结束
+		  		color.push("#"+ca+cb+cc+cd+ce+cf);
+		  		arrX.push(500);
+		  		arrY.push(500);
+		  	};
+		  	(function draw(){
+		  		window.requestAnimationFrame(draw,canvas);
+		  		ctx.clearRect(0,0,1000,500);
+		  		for(i=0;i<50;i++){
+		  			arrX[i]+=arrA[i];
+		  			arrB[i]+=1;//相当于重力加速度，每次重绘，都有一个向下的速度。
+		  			arrY[i]+=arrB[i];
+		  			if(arrY[i]<0||arrY[i]>500||arrX[i]<300||arrX[i]>700){
+		  				arrX[i]=500;
+		  				arrY[i]=500;
+		  				arrA[i]=Math.random()*6-3;
+		  				arrB[i]=Math.random()*(-10)-20; 	
+						//console.log(y);
+		  			}
+		  			ctx.save();
+					ctx.beginPath();
+		  			ctx.arc(arrX[i],arrY[i],20,0,Math.PI*2,true);
+		 			ctx.closePath();
+		  			ctx.fillStyle=color[i];
+		  			ctx.fill();
+		  			ctx.restore();
+		  		}	
+		  	}())
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

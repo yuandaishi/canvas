@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					arcX=Math.random()*1000,
+					arcY=Math.random()*500,
+					f=0.9,
+					spring=0.03,
+					targetX=0,
+					targetY=0,
+					aX=0,
+					aY=0,
+					vX=0,
+					vY=0,
+					r=50,
+					color=[],
+					angle=0,
+					lineHeight=100
+			//取随机色
+				color[0]=Math.ceil(Math.random()*255),
+				color[1]=Math.ceil(Math.random()*255),
+				color[2]=Math.ceil(Math.random()*255);		
+			$("#canvas").mousemove(function(e){
+				targetX=e.offsetX;
+				targetY=e.offsetY;
+				
+			});
+				(function draw(){
+					con=window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,1000,500);
+					angle=Math.atan2(targetY-arcY,targetX-arcX);
+					aX=(targetX-arcX-lineHeight*Math.cos(angle))*spring;
+					aY=(targetY-arcY-lineHeight*Math.sin(angle))*spring;
+					vX+=aX;
+					vY+=aY;
+					vX*=f;
+					vY*=f;
+					arcX+=vX;
+					arcY+=vY;
+					ctx.beginPath();
+					ctx.moveTo(arcX,arcY);
+					ctx.lineTo(targetX,targetY);
+					ctx.stroke();
+					ctx.beginPath();
+					ctx.save();
+					ctx.arc(arcX,arcY,r,0,Math.PI*2,true);
+					//修饰部分
+					ctx.shadowBlur=5;
+						ctx.shadowColor="#0063CE";
+						fillstyle=ctx.createRadialGradient(arcX,arcY,0,arcX,arcY,r);
+						fillstyle.addColorStop(0,"rgb("+color[0]+","+color[1]+","+color[2]+")");
+						fillstyle.addColorStop(1,"rgb(60,60,60)");
+						ctx.fillStyle=fillstyle;
+					ctx.fill();
+					ctx.restore();
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<h3>黑线相当于弹簧，有固定长度，大于固定长度时球会被拉回来，小于固定长度时，球会被弹开</h3>
+	</body>
+</html>

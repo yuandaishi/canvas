@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					bounce=-0.5,
+					g=0.1,
+					ax=0,
+					vx=0,
+					vy=0,
+					vy=0,
+					arcX=250,
+					arcY=50,
+					r=50,
+					lineX=200,
+					lineY=250,
+					lineX_1=800,
+					lineY_1=400,
+					angle=Math.atan2(lineY_1-lineY,lineX_1-lineX);
+					color=[];
+					color[0]=Math.round(Math.random()*255);
+					color[1]=Math.round(Math.random()*255);
+					color[2]=Math.round(Math.random()*255);
+				(function draw(){
+					con=window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					vy+=g;
+					vx+=ax;
+					arcY+=vy;
+					arcX+=vx;
+					if(arcY>=arcX*0.25+200-r){
+						arcY=arcX*0.25+200-r;//0.25和200由(200a+b=250;800a+b=400中的a,b算出)
+						vy*=bounce;
+						ax=Math.sin(angle)*Math.cos(angle)*g*Math.abs(bounce);
+					}
+					ctx.save();
+					ctx.beginPath();
+					ctx.moveTo(lineX,lineY);
+					ctx.lineTo(lineX_1,lineY_1);
+					ctx.stroke();
+					ctx.restore();
+					ctx.save();
+					ctx.beginPath();
+					ctx.arc(arcX,arcY,r,0,Math.PI*2,true);
+					fillstyle=ctx.createRadialGradient(arcX,arcY,0,arcX,arcY,r);
+					fillstyle.addColorStop(0,"rgb("+color[0]+","+color[1]+","+color[2]+")");
+					fillstyle.addColorStop(1,"rgb(60,60,60)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+					ctx.restore();
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

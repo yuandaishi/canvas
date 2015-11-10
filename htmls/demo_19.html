@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		//之前写字主要依靠于moveTo和lineTo函数。现在主要依靠于对每一个像素的修饰
+		 $(document).ready(function(){
+		 	var canvas=$("#canvas")[0];
+		 	var ctx=canvas.getContext("2d");
+		 	var imagedata=ctx.getImageData(0,0,1000,500);
+		 	var px=imagedata.data;
+		 	var b
+		 	$("#canvas").mouseup(function(){
+		  		 b=false;
+		  	})
+		 	$("#canvas").mousedown(function(){
+		 		 b=true;
+		 	})
+		 		 $("#canvas").mousemove(function(event){
+		 		 	var x0=event.offsetX;
+		 			var y0=event.offsetY;
+		 		//console.log(b);
+		 		if(b===true){
+		 			for(i=0;i<25;i++){
+		 				var radius=Math.random()*25;
+		 				var a=Math.random()*2*Math.PI;
+		 				var x1=(x0+Math.sin(a)*radius)|0;
+		 				var y1=(y0+Math.cos(a)*radius)|0;
+		 				var offset=4*(x1+y1*1000);//例如第400个值对应的就是第100个像素的r的值（括号内为第几个像素，每个像素有4个值）
+		 				//console.log(x0);
+		 				px[offset]=Math.random()*255|0;
+		 				px[offset+1]=Math.random()*255|0;
+		 				px[offset+2]=Math.random()*255|0;	
+		 				px[offset+3]=255;
+		 			}
+		 			ctx.putImageData(imagedata, 0, 0);
+		 		}		
+		 		})
+		 })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000px" height="500px"></canvas>
+	</body>
+</html>

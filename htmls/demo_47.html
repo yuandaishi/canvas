@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+				    ctx=canvas.getContext("2d"),
+				    arcX=500,
+				    arcY=500,
+				    conditions=false,
+				    //isInBall=62500;
+				    r=40,
+				    ax=0,
+				    ay=0,
+				    f=0.98//摩擦系数 ,
+				    vx=0,
+				    vy=0,
+				    angle=0,
+				    a=0,//每次增加的角速度,
+				    //isInput=0,
+				    g=0.5;//重力加速度
+				$("#canvas").mousedown(function(e){
+					var clickX=e.offsetX,
+					    clickY=e.offsetY,
+					    isIN=(clickX-arcX)*(clickX-arcX)+(clickY-arcY)*(clickY-arcY);
+					if(isIN<1600){//判断点击的点是否在球内部
+						conditions=true;
+						//console.log(isInput);
+					}
+					//console.log(conditions);
+				})
+				$("#canvas").mouseup(function(){
+					conditions=false;
+				})
+				$("#canvas").mousemove(function(e){
+					//isInBall=(arcX-500)*(arcX-500)+(arcY-250)*(arcY-250);
+					//console.log(isInBall);
+					if(conditions){
+						virtualX=e.offsetX;// 通过一个虚拟的x和y轴坐标，若虚拟x和y轴坐标大于既定圆，则不取这个虚拟坐标
+						virtualY=e.offsetY;
+						isInBall=(virtualX-500)*(virtualX-500)+(virtualY-250)*(virtualY-250);
+						if(isInBall<=62500){
+							arcX=virtualX;
+							arcY=virtualY;
+						}
+					}
+				});
+				(function drawImage(){
+					con=window.requestAnimationFrame(drawImage,canvas);
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+						//console.log(angle);
+						a=0.005;
+						angle+=a;
+						arcX=500+250*Math.cos(Math.PI/2+angle);
+						arcY=250+250*Math.sin(Math.PI/2+angle)
+						console.log(arcX+"||"+angle);
+					ctx.moveTo(500,250);
+					ctx.lineTo(arcX,arcY);
+					ctx.stroke();
+					ctx.beginPath();
+					ctx.arc(arcX,arcY,r,0,Math.PI*2,true);
+					ctx.shadowColor="#445566";
+					ctx.shadowBlur=20;
+					fillstyle=ctx.createRadialGradient(arcX,arcY,0,arcX,arcY,r);
+					fillstyle.addColorStop(0,"rgb(255,0,0)");
+					fillstyle.addColorStop(1,"rgb(50,0,0)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+					//console.log(arcY);
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<p>不是弹性绳子</p>
+	</body>
+</html>

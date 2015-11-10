@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>isPointpath测试</title>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500">
+			对不起，您的浏览器不支持canvas标签
+		</canvas>
+		<script src="../js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var canvas=$("#canvas")[0];
+			var ctx=canvas.getContext("2d");
+			var arcx=100;
+			var arcy=100;
+			$(document).ready(function(){
+				ctx.beginPath();
+				ctx.save();
+				ctx.moveTo(500,250);
+				ctx.lineTo(698,375);
+				ctx.lineTo(730,125);
+				ctx.quadraticCurveTo(300,50,460,350);
+				ctx.closePath();
+				ctx.fillStyle="#000088";
+				ctx.fill();
+				ctx.restore();
+				ctx.save();
+				ctx.beginPath();
+				ctx.arc(arcx,arcy,100,0,Math.PI*2,false);
+				ctx.fillStyle="#550000";
+				ctx.fill();
+				ctx.restore();
+				$("#canvas").mousemove(function(data){
+					var x=data.offsetX;
+					var y=data.offsetY;
+						arcx=x;
+						arcy=y;
+						//绘制圆
+						ctx.clearRect(0,0,1000,500);
+						ctx.save;
+						ctx.beginPath();
+						ctx.arc(arcx,arcy,100,0,Math.PI*2,false);
+						ctx.fillStyle="#550000";
+						ctx.fill();
+						ctx.restore();
+							//绘制不规则多边形
+						ctx.save();
+						ctx.beginPath();
+						ctx.moveTo(500,250);
+						ctx.lineTo(698,375);
+						ctx.lineTo(730,125);
+						ctx.quadraticCurveTo(300,50,460,350);
+						ctx.closePath();
+						ctx.fillStyle="#000000";
+						ctx.fill();
+						ctx.restore();
+					if(ctx.isPointInPath(x,y)){
+						//绘制不规则多边形
+						ctx.clearRect(0,0,1000,500);
+						ctx.save();
+						ctx.beginPath();
+						ctx.moveTo(500,250);
+						ctx.lineTo(698,375);
+						ctx.lineTo(730,125);
+						ctx.quadraticCurveTo(300,50,460,350);
+						ctx.closePath();
+						ctx.fillStyle="#000000";
+						ctx.fill();
+						ctx.restore();
+						ctx.save();
+						//绘制圆
+						ctx.save;
+						ctx.beginPath();
+						ctx.arc(arcx,arcy,100,0,Math.PI*2,false);
+						ctx.fillStyle="#550000";
+						ctx.fill();
+						ctx.restore();
+					}else{
+						ctx.clearRect(0,0,1000,500);
+						ctx.beginPath();
+						ctx.moveTo(500,250);
+						ctx.lineTo(698,375);
+						ctx.lineTo(730,125);
+						ctx.quadraticCurveTo(300,50,460,350);
+						ctx.closePath();
+						ctx.fillStyle="#000088";
+						ctx.fill();
+					}
+				})
+			})
+		</script>
+	</body>
+</html>

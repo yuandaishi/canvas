@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var arcX=Math.random()*1000;
+				var arcY=Math.random()*500;
+				var r=50;
+				var ax=0;
+				var ay=0;
+				var vx=0;
+				var vy=0;
+				var targetX=arcX;
+				var targetY=arcY;
+					$("#canvas").mousemove(function(e){
+						targetX=e.offsetX;
+						targetY=e.offsetY;
+					});
+				(function DrawImage(){
+					draw=window.requestAnimationFrame(DrawImage,canvas);
+					ax=(targetX-arcX)/100;
+					ay=(targetY-arcY)/100;
+					vx+=ax;
+					vy+=ay;
+					vx*=0.95;
+					vy*=0.95;
+					arcX+=vx;
+					arcY+=vy;
+					ctx.clearRect(0,0,1000,500);
+					ctx.beginPath();
+					ctx.arc(arcX,arcY,r,0,Math.PI*2,true);
+//					ctx.shadowOffsetX=10;//阴影X轴偏移
+//					ctx.shadowOffsetY=10;//阴影Y轴偏移
+					ctx.shadowColor="rgba(100,100,100,0.5)";
+					ctx.shadowBlur=30;//阴影宽度
+					fillstyle=ctx.createRadialGradient(arcX,arcY,0,arcX,arcY,50);
+					fillstyle.addColorStop(0,"rgb(255,0,0)");
+					fillstyle.addColorStop(1,"rgb(50,0,0)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

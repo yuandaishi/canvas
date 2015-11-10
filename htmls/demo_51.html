@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					arcX=[],
+					arcY=[],
+					ax=[],
+					ay=[],
+					color=[],
+					vBx=0,
+					vBy=0,
+					r=20,//小球半径
+					R=40,//大球半径
+					targetX=0,
+					targetY=0,
+					f=0.95,
+					swing=0.03,
+					arcBx=Math.random()*1000,
+					arcBy=Math.random()*500,
+					conditions=false;
+					k=3;
+				for(i=0;i<k;i++){
+					arcX[i]=Math.random()*1000;
+					arcY[i]=Math.random()*500;
+				};
+				for(i=0;i<k;i++){
+					ax[i]=0;
+					ay[i]=0;
+				};
+				//取随机色
+				for(i=0;i<k+1;i++){
+					color[i]=Math.ceil(Math.random()*255);
+					color[i+1]=Math.ceil(Math.random()*255);
+					color[i+2]=Math.ceil(Math.random()*255);
+				};
+				$("#canvas").mouseup(function(){
+					conditions=false;
+				});
+				$("#canvas").mousedown(function(e){
+					var con=true;
+					targetX=e.offsetX;
+					targetY=e.offsetY;
+					for(i=0;i<k;i++){
+						var isInBall=(targetX-arcX[i])*(targetX-arcX[i])+(targetY-arcY[i])*(targetY-arcY[i]);
+						if(con&&isInBall<=r*r){
+							conditions=true;
+							con=false;
+							a=i;
+						}
+					}
+				});
+				$("#canvas").mousemove(function(e){
+					if(conditions){
+						arcX[a]=e.offsetX;
+						arcY[a]=e.offsetY;
+					}
+				});
+				(function draw(){
+					link=window.requestAnimationFrame(draw,canvas);
+					var aBx=0,
+						aBy=0;
+					ctx.clearRect(0,0,1000,500);
+					for(i=0;i<k;i++){
+						ax[i]=(arcX[i]-arcBx)*swing;
+						ay[i]=(arcY[i]-arcBy)*swing;
+						aBx+=ax[i];
+						aBy+=ay[i];
+					};
+					vBx+=aBx;
+					vBy+=aBy;
+					vBx*=f;
+					vBy*=f;
+					arcBx+=vBx;
+					arcBy+=vBy;
+					for(i=0;i<k;i++){
+						ctx.beginPath();
+						ctx.moveTo(arcX[i],arcY[i]);
+						ctx.lineTo(arcBx,arcBy);
+						ctx.stroke();
+						ctx.save();
+						ctx.beginPath();
+						ctx.arc(arcX[i],arcY[i],r,0,Math.PI*2,true);
+						//  修饰部分，可以不要
+						ctx.shadowBlur=5;
+						ctx.shadowColor="#0063CE";
+						fillstyle=ctx.createRadialGradient(arcX[i],arcY[i],0,arcX[i],arcY[i],r);
+						fillstyle.addColorStop(0,"rgb("+color[i]+","+color[i+1]+","+color[i+2]+")");
+						fillstyle.addColorStop(1,"rgb(60,60,60)");
+						ctx.fillStyle=fillstyle;
+						//
+						ctx.fill();
+						ctx.restore();
+					};
+					ctx.beginPath();
+					ctx.save();
+					ctx.arc(arcBx,arcBy,R,0,Math.PI*2,true);
+					//  修饰部分，可以不要
+						ctx.shadowBlur=5;
+						ctx.shadowColor="#0063CE";
+						fillstyle=ctx.createRadialGradient(arcBx,arcBy,0,arcBx,arcBy,R);
+						fillstyle.addColorStop(0,"rgb("+color[i]+","+color[i+1]+","+color[i+2]+")");
+						fillstyle.addColorStop(1,"rgb(60,60,60)");
+						ctx.fillStyle=fillstyle;
+						ctx.fill();
+					//
+					ctx.fill();
+					ctx.restore();
+					//console.log(conditions);
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

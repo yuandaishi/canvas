@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var x=0;
+		  	var a=0;
+		  	var b=0;
+		  	setInterval(function(){
+		  		x+=1;
+		  		a+=2;
+		  		b+=1;
+		  		ctx.clearRect(0,0,1000,500);
+		  		ctx.beginPath();
+		  		ctx.arc(x,250,50,0,Math.PI*2,true);
+		  		ctx.closePath();
+		  		ctx.fillStyle="#00549D";
+		  		ctx.fill();
+		  		ctx.beginPath();
+		  		ctx.arc(a,b,50,0,Math.PI*2,true);
+		  		ctx.closePath();
+		  		ctx.fillStyle="#00549D";
+		  		ctx.fill();
+		  	},20)
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	$("#canvas").click(function(){
+		  		var x=Math.random()*1000;
+		  		var y=Math.random()*500;
+		  		var m=Math.random()*1000;
+		  		var n=Math.random()*500;
+		  		var k=x-m;
+		  		var j=y-n;
+		  		var s=Math.sqrt(k*k+j*j);
+		  		ctx.clearRect(0,0,1000,500);
+		  		//ctx.save();
+		  		ctx.fillStyle="#003BB3";
+		  		ctx.fillRect(x,y,5,5);
+		  		ctx.fillStyle="#990033";
+		  		ctx.fillRect(m,n,5,5);
+		  		ctx.beginPath();
+		  		ctx.moveTo(x+2.5,y+2.5);
+		  		ctx.lineTo(m+2.5,n+2.4);
+		  		ctx.closePath();
+		  		ctx.stroke();
+		  		$("#text").val(s);
+		  		//console.log(x+","+y);
+		  		//ctx.restore();
+		  	})
+		  	
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000px" height="500px"></canvas>
+		<input type="text" name="" id="text" value="" />
+	</body>
+</html>

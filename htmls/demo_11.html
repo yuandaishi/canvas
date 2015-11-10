@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+					ctx.fillStyle="#006505";
+					ctx.fillRect(500,250,4,4);
+				$("#canvas").mousemove(function(e){
+					//ctx.clearRect(0,0,1000,500);
+					var x=e.offsetX;
+					var y=e.offsetY;
+					//console.log(x);
+					//console.log(y);
+					var m=x;
+					var n=y;
+					//var k=Math.sqrt(m*m+n*n);
+					ctx.clearRect(500,250,4,4);
+					ctx.fillStyle="#006505";
+					ctx.fillRect(500,250,4,4);
+					ctx.beginPath();
+					ctx.moveTo(502,252);
+					ctx.lineTo(m,n);
+					ctx.stroke();
+					
+					
+				})
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000px" height="500px"></canvas>
+	</body>
+</html>

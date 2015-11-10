@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var a=0;
+		  	var vx=0;
+		  	var b=0;
+		  	var vy=0;
+		  	$(window).keydown(function(e){
+		  		if(e.keyCode===37){
+		  			a-=0.2;
+		  		}else if(e.keyCode===39){
+		  			a+=0.2;
+		  		}else if(e.keyCode===38){
+		  			b-=0.2;
+		  		}else if(e.keyCode===40){
+		  			b+=0.2;
+		  		}
+		  	})
+		  	$(window).keyup(function(){
+		  		b-=0.2;
+		  	});
+//		  	setInterval(function(){
+//		  		vx+=a;
+//		  		vy+=b;
+//		  		ctx.clearRect(0,0,1000,500);
+//		  		ctx.fillStyle="#120D64";
+//		  		ctx.beginPath();
+//		  		ctx.arc(500+vx,250+vy,40,0,2*Math.PI,true);
+//		  		ctx.closePath();
+//		  		ctx.fill();
+//		  	})
+			(function drawFrame () {
+       		window.requestAnimationFrame(drawFrame, canvas);
+        	ctx.clearRect(0, 0, 1000, 500);
+
+        	vx += a;
+        	vy += b;
+        	ctx.fillStyle="#120D64";
+		  	ctx.beginPath();
+		  	ctx.arc(500+vx,250+vy,40,0,2*Math.PI,true);
+		  	ctx.closePath();
+		  	ctx.fill();
+      		}());
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

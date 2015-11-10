@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var w=canvas.width;
+				var h=canvas.height;
+				var x=500;
+				var y=50;
+				var r=30;
+				var va=0.1;//相当于重力加速度
+				var k=-0.7;//碰撞之后损失的系数
+				var a=0;
+				var b=0;
+				var vx=Math.random()*6-3;//开始时X轴速度，取值在-3至3之间
+				var vy=Math.random()*10-5;//开始时Y轴速度，取值在-5至5之间
+				(function draw(){
+						x+=vx;
+						vy+=va;
+						y+=vy;
+						if(y>h-r){
+							vy*=k;//碰撞之后的每次速度损失0.3的系数，并且方向相反。绝对值越来越小。倍数比加减好，不会出现加减之后异号的问题
+							y=h-r;//这句非常重要，没有这句话，球会掉下去。若倍数是1的话，则不需要
+						}
+						if(y<r){
+							vy*=k;
+							y=r;
+						}
+						if(x>w-r){
+							vx*=k;
+							x=w-r;
+						}
+						if(x<r){
+							vx*=k;
+							x=r;
+						}
+					window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,w,h);
+					ctx.beginPath();
+					ctx.arc(x,y,r,0,Math.PI*2,true);
+					ctx.closePath();
+					ctx.fillStyle="#03C9BD";
+					ctx.fill();
+				}())
+			})
+		</script>
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

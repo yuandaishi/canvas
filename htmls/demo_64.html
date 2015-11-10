@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					w=canvas.width,
+					h=canvas.height,
+					r=50,
+					R=100,
+					bounce=-1,
+					massOne=2,
+					massTwo=4,
+					arcX_1=Math.random()*1000|0,
+					arcY_1=Math.random()*500|0,
+					arcX_2=Math.random()*1000|0,
+					arcY_2=Math.random()*500|0,
+					vx_1=Math.random()*10|0-5,
+					vy_1=Math.random()*10|0-5,
+					vx_2=Math.random()*10|0-5,
+					vy_2=Math.random()*10|0-5;
+				(function draw(){
+					con=window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,w,h);//清除重绘
+					arcX_1+=vx_1;
+					arcY_1+=vy_1;
+					arcX_2+=vx_2;
+					arcY_2+=vy_2;
+					//判断球是否碰到边缘，碰到速度反向
+					if(arcX_1<r||arcX_1>950){
+						vx_1*=bounce;
+					}
+					if(arcY_1<r||arcY_1>450){
+						vy_1*=bounce;
+					}
+					if(arcX_2<R||arcX_2>900){
+						vx_2*=bounce;
+					}
+					if(arcY_2<R||arcY_2>400){
+						vy_2*=bounce;
+					}
+					//若球一开始就超过边界，则直接弹出
+					if(arcX_1<r){
+						arcX_1=r
+					}
+					if(arcX_1>950){
+						arcX_1=950
+					}
+					if(arcY_1<r){
+						arcY_1=r
+					}
+					if(arcY_1>450){
+						arcY_1=450
+					}
+					if(arcX_2<R){
+						arcX_2=R
+					}
+					if(arcX_2>900){
+						arcX_2=900
+					}
+					if(arcY_2<R){
+						arcY_2=R
+					}
+					if(arcY_2>400){
+						arcY_2=400
+					}
+					//判断两球碰撞
+				var collision=Math.sqrt(Math.pow((arcX_1-arcX_2),2)+Math.pow((arcY_1-arcY_2),2));
+					//console.log(collision);
+					//判读碰撞时，两球圆心连线的角度
+				var dx=arcX_2-arcX_1;
+				var dy=arcY_2-arcY_1;
+					if(collision<=150){
+						var angle=Math.atan2(dy,dx);//角度
+						var sin=Math.sin(angle);
+						var cos=Math.cos(angle);
+						
+						 /////将两圆旋转至水平方向////////
+      				    var x0=0;
+       					var y0=0;
+       					var x1=dx*cos+dy*sin;//相当于R+r
+       					var y1=dy*cos-dx*sin;//相当于0
+       					//////////////旋转速度方向///////////////
+       					var vx0=vx_1*cos+vy_1*sin;
+      					var vy0=vy_1*cos-vx_1*sin;  
+       					var vx1=vx_2*cos+vy_2*sin;
+       					var vy1=vy_2*cos-vx_2*sin;
+       					
+       					//碰撞后，连心线方向速度相互交换，碰撞切点方向速度不变。
+       					var vxTotal=vx0-vx1;
+       						vx0= ((massOne - massTwo) * vx0 + 2 * massTwo * vx1)/(massOne + massTwo);
+       						vx1=vxTotal + vx0;
+       						x0+= vx0;
+          					x1 += vx1;
+       						
+          				/////////////////将两个物体旋转至原来的位置/////////////////
+          				var x0Final = x0 * cos - y0 * sin,
+              				y0Final = y0 * cos + x0 * sin,
+              				x1Final = x1 * cos - y1 * sin,
+              				y1Final = y1 * cos + x1 * sin;
+              				
+              				//adjust positions to actual screen positions
+          					arcX_2 = arcX_1 + x1Final;
+          					arcY_2 = arcY_1 + y1Final;
+          					arcX_1 = arcX_1 + x0Final;
+          					arcY_1 = arcY_1 + y0Final;
+          					//速度返回原来的位置	
+          					vx_1 = vx0 * cos - vy0 * sin;
+          					vy_1 = vy0 * cos + vx0 * sin;
+          					vx_2 = vx1 * cos - vy1 * sin;
+         					vy_2 = vy1 * cos + vx1 * sin;
+					}
+					ctx.save();
+					ctx.beginPath();
+					ctx.arc(arcX_1,arcY_1,r,0,Math.PI*2,true);
+					ctx.arc(arcX_2,arcY_2,R,0,Math.PI*2,true);
+					ctx.fillStyle=$("#color").val();
+					ctx.fill();
+					ctx.restore();
+					
+				}())
+			})
+		</script>
+		<style type="text/css">
+			#box{
+				position: absolute;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<span id="">
+				颜色选择器
+			</span>
+			<input type="color" name="color" id="color" value="" />
+		</div>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

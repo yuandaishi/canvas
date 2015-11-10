@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var vxBegin=0;
+				var vyBegin=0;
+				var targetX=500;
+				var targetY=250;
+				var xBegin=Math.random()*1000;
+				var yBegin=Math.random()*500;
+				var r=50;
+				(function drawImage(){
+					conditions=window.requestAnimationFrame(drawImage,canvas);
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					ax=(targetX-xBegin)*0.005;
+					ay=(targetY-yBegin)*0.005;
+					vxBegin+=ax;
+					vyBegin+=ay;
+					xBegin+=vxBegin;
+					yBegin+=vyBegin;
+					ctx.beginPath();
+					ctx.arc(xBegin,yBegin,r,0,Math.PI*2,true);
+					ctx.fillStyle="#FF0000";
+					ctx.fill();
+					console.log(ax);
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<p>其实就是模拟橡皮筋绑着一个球，把球拉倒远处，松开后球的运动过程（能量无损耗）</p>
+	</body>
+</html>

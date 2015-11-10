@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var a=0;
+				var b=0;
+				var vr=0;
+				var radius=0;
+				var v=0;
+				var k=1;
+				var m=2.5;//-25/-10的结果，即求出斜率。
+				var n=0;
+					window.addEventListener("keydown",function(event){
+						switch(event.keyCode){
+							case 37:
+							vr=5;
+							break;
+							case 38:
+							v=2;
+							break;
+							case 39:
+							vr=-5;
+							break;
+						}
+						k=1;
+						//console.log(radius);
+						n=1;
+					});
+					window.addEventListener("keyup",function(){
+						vr=0;
+						k=0.99
+						n=0;
+					});
+				(function draw(){
+					window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,1000,500);
+					radius+=vr*Math.PI/180;
+					v*=k;
+					a+=v*Math.cos(radius);
+					b+=v*Math.sin(radius);
+					//console.log(a);
+					if(a>500){
+						a=-500;
+					}else if(a<-500){
+						a=500;
+					}
+					if(b>250){
+						b=-250;
+						
+					}else if(b<-250){
+						b=250;
+					}
+					ctx.save();
+					ctx.translate(500+a,250+b);
+					ctx.rotate(radius);
+					//console.log(radius);
+					ctx.beginPath();
+					ctx.moveTo(-25,-25);
+					ctx.lineTo(25,0);
+					ctx.lineTo(-25,25);
+					ctx.lineTo(-15,0);
+					ctx.closePath();
+					ctx.stroke();
+					if(n==1){
+						ctx.beginPath();
+						ctx.moveTo(-15+(-15)/m,-15);
+						ctx.lineTo(-45,0);
+						ctx.lineTo(-15+(-15)/m,15);	
+						ctx.stroke();
+					}
+					ctx.restore();
+				}());
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

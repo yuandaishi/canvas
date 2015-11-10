@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  		ctx.beginPath();
+		  		ctx.moveTo(Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.stroke();
+		  	$("#canvas").click(function(){
+		  		ctx.clearRect(0,0,1000,500);
+		  		ctx.beginPath();
+		  		ctx.moveTo(Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.quadraticCurveTo(Math.random()*1000,Math.random()*500,Math.random()*1000,Math.random()*500);
+		  		ctx.closePath();
+		  		ctx.stroke();
+		  	})
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000px" height="500px"></canvas>
+	</body>
+</html>

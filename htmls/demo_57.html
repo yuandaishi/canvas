@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					numbers=10,
+					bounce=-1,
+					R=80;
+					balls=[];
+							
+				function ball(){
+					this.x=0;
+					this.y=0;
+					this.ax=0;
+					this.ay=0
+					this.vx=0;
+					this.vy=0;
+					this.radius=10;
+					this.angle=0;
+					this.isAtack=0;
+					this.R=Math.ceil(Math.random()*255);
+					this.G=Math.ceil(Math.random()*255);
+					this.B=Math.ceil(Math.random()*255);	
+				};
+				
+				ball.prototype.draw=function (ctx){
+					ctx.save();
+					ctx.beginPath();
+					this.x+=this.vx;
+					this.y+=this.vy;
+					this.angle=Math.atan2(250-this.y,500-this.x);
+					this.isAtack=Math.sqrt(Math.pow((this.x-canvas.width/2),2)+Math.pow((this.y-canvas.height/2),2));
+					if (this.x + this.radius > 1000) {
+         				this.x = 1000- this.radius;
+         				this.vx *= bounce;
+        			} else if (this.x - this.radius < 0) {
+          				this.x = this.radius;
+          				this.vx *= bounce;
+       				}
+        			
+        			if(this.isAtack<=R+this.radius){
+       					this.x=500-(this.radius+R)*Math.cos(this.angle);
+       					this.y=250-(this.radius+R)*Math.sin(this.angle);
+       				}
+        			
+      			    if (this.y + this.radius > 500) {
+          				this.y = 500 - this.radius;
+          				this.vy *= bounce;
+        			} else if (this.y - this.radius < 0) {
+          				this.y = this.radius;
+          				this.vy *= bounce;
+       				 }
+					ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,true);
+					fillstyle=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.radius);
+					fillstyle.addColorStop(0,"rgb("+this.R+","+this.G+","+this.B+")");
+					fillstyle.addColorStop(1,"rgb(60,60,60)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+					ctx.restore();
+					console.log(this.isAtack);
+				};
+				
+				function drawBall(ball){
+					ball.draw(ctx);
+				}
+				
+				for(i=0;i<numbers;i++){
+					Ball=new ball();
+					Ball.x=Math.random()*1000;
+					Ball.y=Math.random()*500;
+					Ball.vx=Math.random()*8-4;
+					Ball.vy=Math.random()*8-4;
+					Ball.radius=Math.random()*50+10
+					balls.push(Ball);
+				};
+				//console.log(balls[5]);
+				(function drawImage(){
+					con=window.requestAnimationFrame(drawImage,canvas);
+					ctx.clearRect(0,0,1000,500);
+					ctx.save(),
+					ctx.beginPath()
+					ctx.arc(canvas.width/2,canvas.height/2,R,0,Math.PI*2,true);
+					fillstyle=ctx.createRadialGradient(canvas.width/2,canvas.height/2,0,canvas.width/2,canvas.height/2,R);
+					fillstyle.addColorStop(0,"rgb(255,255,255)");
+					fillstyle.addColorStop(1,"rgb(60,60,60)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+					ctx.restore();
+					balls.forEach(drawBall);
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					r=30,
+					g=1.5,//重力加速
+					f=0.9,
+					target0_x=Math.random()*1000,
+					target0_y=Math.random()*500,
+					arcX=[],
+					arcY=[]
+					vx=[],
+					vy=[],
+					ax=[],
+					ay=[],
+					color=[],
+					k=7,//球的个数
+					swing=0.03;
+				for(i=0;i<k;i++){
+					vx[i]=0;
+					vy[i]=0;
+					ax[i]=0;
+					ay[i]=0;
+				}
+				for(i=0;i<k;i++){
+					arcX[i]=target0_x;
+					arcY[i]=target0_y;
+				}
+				$("#canvas").mousemove(function(e){
+					target0_x=e.offsetX;
+					target0_y=e.offsetY;
+				});
+				//取随机色
+				for(i=0;i<k;i++){
+					color[i]=Math.ceil(Math.random()*255);
+					color[i+1]=Math.ceil(Math.random()*255);
+					color[i+2]=Math.ceil(Math.random()*255);
+				};		
+				(function draw(){
+					conditions=window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,1000,500);
+					for(i=0;i<k;i++){
+						if(i==0){
+							ax[i]=(target0_x-arcX[i])*swing;
+							ay[i]=(target0_y-arcY[i])*swing+g;
+							vx[i]+=ax[i];
+							vy[i]+=ay[i];
+							vx[i]*=f;
+							vy[i]*=f;
+							arcX[i]+=vx[i];
+							arcY[i]+=vy[i];
+						}else{
+							ax[i]=(arcX[i-1]-arcX[i])*swing;
+							ay[i]=(arcY[i-1]-arcY[i])*swing+g;
+							vx[i]+=ax[i];
+							vy[i]+=ay[i];
+							vx[i]*=f;
+							vy[i]*=f;
+							arcX[i]+=vx[i];
+							arcY[i]+=vy[i];
+						}
+					}
+					for(i=0;i<k;i++){
+						ctx.beginPath();
+						if(i==0){
+							ctx.moveTo(target0_x,target0_y);
+							ctx.lineTo(arcX[i],arcY[i]);
+						}else{
+							ctx.moveTo(arcX[i-1],arcY[i-1]);
+							ctx.lineTo(arcX[i],arcY[i]);
+						}
+						ctx.stroke();
+						ctx.save();
+						ctx.beginPath();
+						ctx.arc(arcX[i],arcY[i],r,0,Math.PI*2,true);
+						ctx.shadowBlur=5;
+						ctx.shadowColor="#01759C";
+						fillstyle=ctx.createRadialGradient(arcX[i],arcY[i],0,arcX[i],arcY[i],r);
+						//console.log(color[i]);
+						fillstyle.addColorStop(0,"rgb("+color[i]+","+color[i+1]+","+color[i+2]+")");
+						fillstyle.addColorStop(1,"rgb(60,60,60)");
+						ctx.fillStyle=fillstyle
+						ctx.fill();
+						ctx.restore();
+					}
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  		//ctx.strokeRect(0,0,200,200);
+		  		g1=ctx.createLinearGradient(0,0,200,200);
+		  		g1.addColorStop(0,"#451896");
+		  		g1.addColorStop(0.3,"#989898");
+		  		g1.addColorStop(0.5,"#aadaad");
+		  		g1.addColorStop(1,"#adaaaa");
+		  		ctx.fillStyle=g1;
+		  		ctx.fillRect(100,100,200,200);
+		  		g2=ctx.createRadialGradient(500,250,20,500,250,100);
+		  		g2.addColorStop(0,"#451896");
+		  		g2.addColorStop(0.3,"#989898");
+		  		g2.addColorStop(0.5,"#aadaad");
+		  		g2.addColorStop(1,"#adaaaa");
+		  		ctx.arc(500,250,100,0,2*Math.PI,false);
+		  		ctx.fillStyle=g2;
+		  		ctx.fill();
+		  		
+		  })
+		</script>
+	</head>
+		<canvas id="canvas" width="1000px" height="500px"></canvas>
+	<body>
+	</body>
+</html>

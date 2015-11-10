@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var cnavas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var x=200;//椭圆的 长半径
+		  	var y=100;//椭圆的短半径
+		  	var a=0;//初始角度
+		  	var b=0.05;//增加角度的速度
+		  	 	ctx.translate(500,250)//椭圆中心点
+		  	setInterval(function(){
+				a+=b;
+				var c=a-0.05;
+				var m=x*Math.sin(Math.PI/2+c);//起点横坐标750
+				var n=y*Math.cos(Math.PI/2+c);//起点纵坐标250
+				var k=x*Math.sin(Math.PI/2+a);//终点横坐标
+				var j=y*Math.cos(Math.PI/2+a);//终点纵坐标
+				if(c<2*Math.PI){
+					//颜色开始
+		  			var zero=Math.floor(Math.random()*15);
+		  			var one=Math.floor(Math.random()*15);
+		  			var two=Math.floor(Math.random()*15);
+		  			var three=Math.floor(Math.random()*15);
+		  			var four=Math.floor(Math.random()*15);
+		  			var five=Math.floor(Math.random()*15);
+		  			var arr=["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+		  			var ca=arr[zero];
+		  			var cb=arr[one];
+		 			var cc=arr[two];
+		  			var cd=arr[three];
+		  			var ce=arr[four];
+		  			var cf=arr[five];
+		  			//颜色结束
+					ctx.beginPath();
+					ctx.moveTo(m,n);
+					ctx.lineTo(k,j);
+					ctx.closePath();
+					ctx.strokeStyle="#"+ca+cb+cc+cd+ce+cf;
+					ctx.stroke();
+					ctx.beginPath();
+					ctx.arc(m,n,100,0,2*Math.PI,true);
+					ctx.closePath();
+					ctx.stroke();
+				}
+				
+		  	},10)
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000px" height="500"></canvas>
+	</body>
+</html>

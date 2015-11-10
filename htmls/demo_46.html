@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+				    ctx=canvas.getContext("2d"),
+				    arcX=500,
+				    arcY=250,
+				    conditions=false,
+				    r=40,
+				    ax=0,
+				    ay=0,
+				    f=0.98//摩擦系数 ,
+				    vx=0,
+				    vy=0,
+				    g=1;//重力加速度
+				$("#canvas").mousedown(function(e){
+					var clickX=e.offsetX,
+					    clickY=e.offsetY,
+					    isIN=(clickX-arcX)*(clickX-arcX)+(clickY-arcY)*(clickY-arcY);
+					if(isIN<1600){
+						conditions=true;
+					}
+					console.log(conditions);
+				})
+				$("#canvas").mouseup(function(){
+					conditions=false;
+				})
+				$("#canvas").mousemove(function(e){
+					if(conditions){
+						arcX=e.offsetX;
+						arcY=e.offsetY;	
+						//console.log(arcX);
+					}
+				});
+				(function drawImage(){
+					con=window.requestAnimationFrame(drawImage,canvas);
+					if(!conditions){
+						ax=(500-arcX)/100;
+						ay=(250-arcY)/100;
+						vx+=ax;
+						vy+=ay+g;
+						vx*=f;
+						vy*=f
+						arcX+=vx;
+						arcY+=vy;
+					}
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					ctx.moveTo(500,250);
+					ctx.lineTo(arcX,arcY);
+					ctx.stroke();
+					ctx.beginPath();
+					ctx.arc(arcX,arcY,r,0,Math.PI*2,true);
+					ctx.shadowColor="#445566";
+					ctx.shadowBlur=20;
+					fillstyle=ctx.createRadialGradient(arcX,arcY,0,arcX,arcY,r);
+					fillstyle.addColorStop(0,"rgb(255,0,0)");
+					fillstyle.addColorStop(1,"rgb(50,0,0)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<p>弹性绳子</p>
+	</body>
+</html>

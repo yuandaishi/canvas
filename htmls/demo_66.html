@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					w=canvas.width,
+					h=canvas.height,
+					numbers=20,
+					bounce=-0.8,
+					particles=[];
+					//定义粒子
+				function particle(){
+					this.radius=Math.random()*30+10;
+					this.x=Math.random()*w;
+					this.y=Math.random()*h;
+					this.vx=0;
+					this.vy=0;
+					this.mass=this.radius;
+					this.R=Math.round(Math.random() * 255);
+					this.G=Math.round(Math.random() * 255);
+					this.B=Math.round(Math.random() * 255);
+				}
+				//把粒子放入数组中
+				for(i=0;i<=numbers;i++){
+					Par=new particle();
+					particles.push(Par);
+					console.log(particles);
+				}
+				//定义速度和距离的关系，貌似是根据物体吸引力来的，具体不是很清楚。
+				function gravitate (partA, partB) {
+       				 var dx = partB.x - partA.x,
+            			 dy = partB.y - partA.y,
+            			 distSQ = dx * dx + dy * dy,
+            			 dist = Math.sqrt(distSQ),
+            			 force = partA.mass * partB.mass / distSQ,
+            			 ax = force * dx / dist,
+            			 ay = force * dy / dist;
+        				 partA.vx += ax / partA.mass;
+        				 partA.vy += ay / partA.mass;
+        				 partB.vx -= ax / partB.mass;
+        				 partB.vy -= ay / partB.mass;
+      			}
+				//定义球体的移动
+				function move (partA, i) {
+       				partA.x += partA.vx;
+       				partA.y += partA.vy;
+        			for (var partB, j = i + 1; j <=numbers; j++) {
+        			//partA = particles[i];
+         			partB = particles[j];
+          			gravitate(partA, partB);
+           			//console.log(partA);
+  	     	    	} 			        			
+     			}
+				//判断碰到墙壁之后的速度
+				function collionWall(particle){
+					if(particle.x<=10){
+						particle.vx*=bounce;
+						particle.x=10;
+					}
+					if(particle.x>=990){
+						particle.vx*=bounce;
+						particle.x=990;
+					}
+					if(particle.y<=10){
+						particle.vy*=bounce;
+						particle.y=10;
+					}
+					if(particle.y>=490){
+						particle.vy*=bounce;
+						particle.y=490;
+					}
+				}
+				
+//定义绘制图形属性
+		particle.prototype.draw = function(ctx) {
+		ctx.save();
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+		ctx.shadowBlur = 5;
+		ctx.shadowColor = "rgb(" + this.R + "," + this.G + "," + this.B + ")";
+		fillstyle = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+		fillstyle.addColorStop(0, "rgb(" + this.R + "," + this.G + "," + this.B + ")");
+		fillstyle.addColorStop(1, "rgb(60,60,60)");
+		ctx.fillStyle = fillstyle;
+		ctx.fill();
+		ctx.restore();
+	};
+	
+	function drawImage(particle) {
+		particle.draw(ctx);
+	};
+				//作图
+				(function draw(){
+					window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,w,h);
+					particles.forEach(move);
+					particles.forEach(drawImage);
+					particles.forEach(collionWall);
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>
+
+
+

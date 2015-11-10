@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>倒计时效果</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+	<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+		
+	</script>
+	<script type="text/javascript" src="js/digit.js">
+		
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var canvas=$("#canvas")[0];
+			var	ctx=canvas.getContext("2d");
+			var	w=canvas.width;
+			var	h=canvas.height;
+			var	left=50;
+			var	top=150;
+			var	radius=3;
+			var	endTime=new Date(2015,1,20,12,45,16);
+			var balls=[];
+
+			//重绘过程
+			(function darw(){
+				con=window.requestAnimationFrame(darw,canvas);
+					setTime();
+					clearCtx(ctx);
+					drawCircle(left,top,parseInt(day/10),ctx);
+					drawCircle(30*(radius+1),top,parseInt(day%10),ctx);
+					drawCircle(45*(radius+1),top,10,ctx);//冒号
+					
+					drawCircle(60*(radius+1),top,parseInt(hour/10),ctx);
+					drawCircle(75*(radius+1),top,parseInt(hour%10),ctx);
+					drawCircle(90*(radius+1),top,10,ctx);//冒号
+					
+					drawCircle(105*(radius+1),top,parseInt(min/10),ctx);
+					drawCircle(120*(radius+1),top,parseInt(min%10),ctx);
+					drawCircle(135*(radius+1),top,10,ctx);//冒号
+					
+					drawCircle(150*(radius+1),top,parseInt(sec/10),ctx);
+					drawCircle(165*(radius+1),top,parseInt(sec%10),ctx);
+			}())
+
+			//时间函数
+			function setTime(){
+				 time=new Date();
+				 deTime=endTime.getTime()-time.getTime();
+				 day=parseInt(deTime/(3600*24*1000));
+				 hour=parseInt(deTime/(3600*1000)%24);
+				 min=parseInt(deTime/(60*1000)%60);
+				 sec=parseInt(deTime/1000%60);
+				 
+			}
+			//清除画布
+			function clearCtx(ctx){
+				ctx.clearRect(0,0,w,h);
+			}
+			//定义绘制函数
+			function drawCircle(x,y,number,ctx){
+				ctx.fillStyle="#008284";
+				for(i=0;i<digit[number].length;i++){
+					for(j=0;j<digit[number][i].length;j++){
+						if(digit[number][i][j]==1){
+							ctx.beginPath();
+							ctx.arc(x+(2*j+1)*(radius+1),y+(2*i+1)*(radius+1),radius,0,Math.PI*2,false);
+							ctx.closePath();
+							ctx.fill();	
+						}
+					}
+				}
+			}
+			
+		})		
+	</script>
+</html>

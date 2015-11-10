@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<style type="text/css">
+			#canvas{
+				background: url("images/2.jpg");
+				/*background-color: rgba(125,45,200,0);*/
+			}
+		</style>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var a;
+//		  	var image=new Image();
+//		  		image.src="images/2.jpg";
+//		  		image.onload=function(){
+//		  			ctx.drawImage(image,0,0);
+//		  			//ctx.globalCompositeOperation="destination-out";
+//		  		}
+				ctx.fillStyle="#00C8DC";
+		  		ctx.fillRect(0,0,487,269);
+		  		$("#canvas").mousedown(function(){
+		  			a=true;
+		  		})
+		  		$("#canvas").mouseup(function(){
+		  			a=false;
+		  		})
+		  		$("#canvas").mousemove(function(e){	
+		  			if(a==true){
+		  				var x=e.offsetX;
+			  			var y=e.offsetY;
+		  				ctx.globalCompositeOperation="destination-out";
+		  				ctx.beginPath();
+		  				ctx.arc(x,y,10,0,Math.PI*2,true);
+		  				ctx.closePath();
+		  				ctx.fill();	
+		  			}	
+		  		})
+						
+		  })
+		</script>
+		</style>
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="487px" height="269px"></canvas>
+	</body>
+</html>

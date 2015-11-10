@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					numbers=30,
+					w=canvas.width,
+					h=canvas.height,
+					vpX = canvas.width / 2,
+          			vpY = canvas.height / 2,
+					f=250,
+					bounce=-1,
+					
+					balls=[];
+				//定义球体
+				function ball(){
+					this.x=0;
+					this.y=0;
+					this.xpos = 0;
+          			this.ypos = 0;
+          			this.zpos = 0;
+					this.radius=Math.random()*10+10;
+					this.R=Math.round(Math.random() * 255);
+					this.G=Math.round(Math.random() * 255);
+					this.B=Math.round(Math.random() * 255);
+					this.vx = Math.random() * 4 - 2;
+          			this.vy = Math.random() * 4 - 2;
+          			this.vz = Math.random() * 4 - 2;
+					this.scaleX=this.scaleY=1;
+					this.visible = true;
+				}
+				//定义球体绘制图形属性
+				ball.prototype.draw=function(ctx){
+					this.xpos+=this.vx;
+					this.ypos+=this.vy;
+					this.zpos += this.vz;
+					if(this.xpos+this.radius>=150){
+						this.xpos = 150 - this.radius;
+						this.vx*=bounce;
+					}else if(this.xpos-this.radius<=-150){
+						this.xpos=-150+this.radius;
+						this.vx*=bounce;
+					}
+					if(this.ypos+this.radius>=150){
+						this.ypos=150-this.radius;
+						this.vy*=bounce;
+					}else if(this.ypos-this.radius<=-150){
+						this.ypos=-150+this.radius;
+						this.vy*=bounce;
+					}
+					//控制缩小放大
+					if(this.zpos+this.radius>=100){
+						this.zpos=100-this.radius;
+						this.vz*=bounce;
+					}else if(this.zpos-this.radius<=-100){
+						this.zpos=-100+this.radius;
+						this.vz*=bounce;
+					}
+					//控制被除数
+					if (this.zpos > -f) {
+          				var sca= f / (f + this.zpos);
+          					this.scaleX = this.scaleY = sca;
+         					this.x =vpX+this.xpos * sca;
+          					this.y = vpY+this.ypos * sca;
+          					this.visible = true;
+        					} else {
+         						 this.visible = false;
+        					}
+					if(this.visible){
+						ctx.save();										
+						ctx.translate(this.x,this.y);
+						ctx.scale(this.scaleX,this.scaleY);
+						ctx.beginPath();
+						ctx.arc(0,0,this.radius,0,Math.PI*2,true);
+						ctx.shaowBlur=5;
+						fillstyle=ctx.createRadialGradient(0,0,0,0,0,this.radius);
+						fillstyle.addColorStop(0, "rgb(" + this.R + "," + this.G + "," + this.B + ")");
+						fillstyle.addColorStop(1, "rgb(60,60,60)");
+						ctx.fillStyle=fillstyle;
+						ctx.fill();
+						ctx.closePath();
+						ctx.restore();
+					}	
+				}
+				//把球体放入数组中
+				for(i=0;i<numbers;i++){
+					Ball=new ball();
+					balls.push(Ball);
+				}
+				//绘制图形属性函数化
+				function drawBall(ball){
+					ball.draw(ctx);
+				}
+				//开始绘制图形
+				(function drawImage(){
+					con=window.requestAnimationFrame(drawImage,canvas);
+					ctx.clearRect(0,0,w,h);
+					balls.forEach(drawBall);
+				}())
+			})
+		</script>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

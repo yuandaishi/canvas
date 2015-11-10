@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var a=Math.random()*1000;
+				var b=Math.random()*500;
+				var r=50;
+				var targetX=canvas.width/2;
+				var targetY=canvas.height/2;
+//				var x0=Math.random()*10-5;不需要定义初始速度，初始速度和初始位置有直接的关系。
+//				var y0=Math.random()*10-5;
+				var easing=0.05;
+					(function draw(){
+						animRequest=window.requestAnimationFrame(draw,canvas);
+						ctx.clearRect(0,0,canvas.width,canvas.height);
+						ax=(targetX-a)*easing;//通过(targetX-a)的值的正负，判断球的减速方向
+						ay=(targetY-b)*easing;
+						if(Math.abs(ax)<0.05&&Math.abs(ay)<0.05){
+							window.cancelAnimationFrame(animRequest);//不在执行draw这个函数，即不在重绘图形，节省内存消耗。
+							a=targetX;
+							b=targetY;
+						}else{
+							a+=ax;
+							b+=ay;
+						};
+						ctx.beginPath();
+						ctx.arc(a,b,r,0,Math.PI*2,true);
+						ctx.fillStyle="#007ED1";
+						ctx.fill();
+						console.log(a);	
+					}());	
+			})
+		</script>
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<p>不定义初始速度的匀减速方法（匀减速，而且往目标方向移动）</p>
+	</body>
+</html>

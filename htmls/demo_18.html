@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var arr=["#006505","#404040","#111eee","#404040","#111eee","#404040",];
+		  	var x=0;
+		  	var n=0;
+		  	for(i=0;i<=5;i++){
+		  		x+=20;
+		  		ctx.fillStyle=arr[i];
+		  		ctx.fillRect(x-20,0,20,500);
+		  		//console.log(x);
+		  	}
+		  	var imgData=ctx.getImageData(0,0,120,500);
+		  	for(i=0;i<9;i++){
+		  		n+=120;
+		  		ctx.putImageData(imgData,n,0);
+		  	}
+		  })
+		</script>
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000px" height="500px"></canvas>
+	</body>
+</html>

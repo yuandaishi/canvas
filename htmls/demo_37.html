@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js"> 
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var w=canvas.width;
+				var h=canvas.height;
+				var a=500;
+				var b=50;
+				var r=30;
+				var va=0.1;//相当于重力加速度
+				var k=-0.7;//碰撞之后损失的系数
+				var vx=Math.random()*6-3;//开始时X轴速度，取值在-3至3之间
+				var vy=Math.random()*10-5;//开始时Y轴速度，取值在-5至5之间
+					conditions=false;
+					isMousedown=true;
+				window.addEventListener("mousedown",function(e){
+					conditions=true;//判断移动的时候，鼠标是否处于点击状态
+					m=e.offsetX;
+					n=e.offsetY;
+					isIn=(m-a)*(m-a)+(n-b)*(n-b);
+					if(isIn<2500){//判断是不是在球内部点击的
+						vx=0;//点击球后，使球竖直方向上的速度为0
+						isMousedown=false;
+						//console.log(isMousedown);
+					}
+					//console.log(m);//只是在放下去的一瞬间的那个值，mousedown是一个点状动作，而不是一个持续性的动作
+				})
+				window.addEventListener("mouseup",function(e){
+					conditions=false;//判断移动的时候，鼠标是否处于点击状态
+					isMousedown=true;
+				})	
+				window.addEventListener("mousemove",function(event){
+					x=event.offsetX;
+					y=event.offsetY;
+					isIn=(x-a)*(x-a)+(y-b)*(y-b);
+					if(conditions&&(isIn<2500)){
+						a=x;
+						b=y;
+						//console.log(a);
+					}
+				});
+				console.log(isMousedown);
+				(function draw(){
+					if(isMousedown){
+						a+=vx;
+						vy+=va;
+						b+=vy;
+						if(b>h-r){
+							vy*=k;//碰撞之后的每次速度损失0.3的系数，并且方向相反。绝对值越来越小。倍数比加减好，不会出现加减之后异号的问题
+							b=h-r;//这句非常重要，没有这句话，球会掉下去。若倍数是1的话，则不需要
+						}
+						if(b<r){
+							vy*=k;
+							b=r;
+						}
+						if(a>w-r){
+							vx*=k;
+							a=w-r;
+						}
+						if(a<r){
+							vx*=k;
+							a=r;
+						}
+					}	
+					window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,w,h);
+					ctx.beginPath();
+					ctx.arc(a,b,r,0,Math.PI*2,true);
+					ctx.closePath();
+					ctx.fillStyle="#03C9BD";
+					ctx.fill();
+				}())
+			})
+		</script>
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var angle=0;
+		  	var ang=0;
+		  	var vx=0;
+		  	var vy=0;
+		  	var x=500;
+		  	var y=250;
+		  	ctx.save();
+		  	ctx.translate(500,250);
+		  	ctx.rotate(Math.PI/4);
+		  	var g=ctx.createLinearGradient(-25,-25,0,0);
+		  		g.addColorStop(0,"rgb(255,255,0)");
+		  		g.addColorStop(1,'rgb(0,255,255)');
+		  	ctx.fillStyle=g;
+		  	ctx.fillRect(-25,-25,25,25);
+		  	ctx.restore();
+		  	$(window).keydown(function(e){
+		  		switch(e.keyCode){
+		  			case 37:
+		  				ang=-Math.PI/90;
+		  				break;
+		  			case 39:
+		  				ang=Math.PI/90
+		  				break;
+		  			case 38:
+		  				vx=Math.cos(angle-Math.PI/2)*5;
+		  				vy=Math.sin(angle-Math.PI/2)*5;
+		  				break;
+		  		}
+		  	});
+		  	$(window).keyup(function(e){
+		  		ang=0;
+		  		vx=0;
+		  		vy=0;
+		  	});
+		  	(function draw(){
+		  		window.requestAnimationFrame(draw,canvas);
+		  		angle+=ang;
+		  		x+=vx;
+		  		y+=vy;
+		  		ctx.clearRect(0,0,1000,500);
+		  		ctx.save();
+		  		ctx.translate(x,y);
+		  		ctx.rotate(angle+Math.PI/4);
+		  		var g=ctx.createLinearGradient(-25,-25,0,0);
+		  		g.addColorStop(0,"rgb(255,255,0)");
+		  		g.addColorStop(1,'rgb(0,255,255)');
+		  		ctx.fillStyle=g;
+		  		//ctx.fillStyle="#005500";
+		  		ctx.fillRect(-25,-25,25,25);
+		  		ctx.restore();
+		  	}());
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<p>按左右键控制方向，按上移动</p>
+	</body>
+</html>

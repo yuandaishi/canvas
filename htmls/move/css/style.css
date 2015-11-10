@@ -1,0 +1,25 @@
+body{
+	margin: 0;
+	padding: 0;
+}
+.box{
+	width: 1000px;
+	height: 500px;
+	margin: 0 auto;
+	position: relative;
+}
+canvas{
+	display: block;
+	margin: 0 auto;
+	background-color: #CCCCCC;
+}
+.logo{
+	font-size: 0;
+	position: absolute;
+	bottom: 0px;
+}
+.button{
+	position: absolute;
+	bottom: 0;
+	left: 500px;
+}

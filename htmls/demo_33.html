@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var w=canvas.width;
+				var h=canvas.height;
+				var x=500;
+				var y=250;
+				var r=30;
+				var add=1.25;
+				var reduce=0.75;
+				var k=0;
+				var vx=0;
+				var vy=0;
+				var m=true;
+					$("#add").click(function(event){
+						if(m==true){
+							vx=Math.random()*6-3;
+							vy=Math.random()*6-3;
+						 	k=1.05;
+						 	m=false;
+						}
+						if(m==false){
+							k=1.05;
+						}
+							//console.log(k);
+					});
+					$("#reduce").click(function(event){
+						 k=0.95;
+							//console.log(k);
+					});
+					$("#stop").click(function(event){
+						 k=0;
+						 m=true;
+							//console.log(k);
+					});
+				(function draw(){
+					window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,w,h);
+					vx*=k;
+					//console.log(vx);
+					vy*=k;
+					x+=vx;
+					y+=vy;
+					ctx.beginPath();
+					ctx.arc(x,y,r,0,Math.PI*2,true);
+					ctx.closePath();
+					ctx.fillStyle="#171B16";
+					ctx.fill();
+					console.log(vx);
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<input type="button" name="add" id="add" value="加速" />
+		<input type="button" name="reduce" id="reduce" value="减速" />
+		<input type="button" name="stop" id="stop" value="停止" />
+	</body>
+</html>

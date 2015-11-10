@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					arcx=[],
+					arcy=[],
+					r=50,
+					R=100;
+					arcx[0]=Math.random()*1000;
+					arcy[0]=Math.random()*500;
+					arcx[1]=Math.random()*1000;
+					arcy[1]=Math.random()*500;
+					conditions=0;
+				
+				$("#canvas").mousemove(function(e){
+						arcx[0]=e.offsetX;
+						arcy[0]=e.offsetY;
+				});
+				//
+				(function draw(){
+					con=window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,1000,500);
+					ctx.beginPath();
+					ctx.save();
+					ctx.arc(arcx[1],arcy[1],R,0,Math.PI*2,true);
+					ctx.fillStyle="#002F79";
+					ctx.fill();
+					ctx.restore();
+					ctx.beginPath();
+					ctx.save();
+					ctx.arc(arcx[0],arcy[0],r,0,Math.PI*2,true);
+					conditions=Math.sqrt(Math.pow((arcx[0]-arcx[1]),2)+Math.pow((arcy[0]-arcy[1]),2));
+					console.log(conditions);
+					if(conditions>=r+R){
+						ctx.fillStyle="#006633";
+					}else{
+						ctx.fillStyle="#FF0000";
+					}
+					ctx.fill();
+					ctx.restore();
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+				    ctx=canvas.getContext("2d"),
+				    radius=50,
+				    radius_1=250,
+				    arcX=canvas.width/2+radius_1,
+				    arcY=canvas.height/2,
+				    arcX_1=canvas.height/2,
+				    arcY_1=canvas.width/2,
+				    a=Math.PI/180;
+				    angle=0;
+				    color=[];
+				    color[0]=Math.round(Math.random()*255);
+				    color[1]=Math.round(Math.random()*255);
+				    color[2]=Math.round(Math.random()*255);
+				    
+				 (function draw(){
+				 	con=window.requestAnimationFrame(draw,canvas);
+				 	ctx.clearRect(0,0,canvas.width,canvas.height);
+				 	ctx.save();
+				 	ctx.beginPath();
+				 	angle+=a;
+				 	arcX=canvas.width/2+radius_1*Math.cos(angle);
+				 	arcY=canvas.height/2+radius_1*Math.sin(angle);
+				 	ctx.arc(arcX,arcY,radius,0,Math.PI*2,true);
+				 	ctx.shadowColor="#006AA9";
+				 	ctx.shadowBlur=10;
+				 	fillstyle=ctx.createRadialGradient(arcX,arcY,0,arcX,arcY,radius);
+				 	fillstyle.addColorStop(0,"rgb("+color[0]+","+color[1]+","+color[2]+")");
+					fillstyle.addColorStop(1,"rgb(60,60,60)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+				 }())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

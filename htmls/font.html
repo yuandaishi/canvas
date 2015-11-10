@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>font样式</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500">
+			对不起，您的浏览器不支持canvas标签
+		</canvas>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			 canvas=$("#canvas")[0];
+ 			 ctx=canvas.getContext("2d");
+			 obj=new Image();
+			obj.src="images/picture.jpg";
+			$(document).ready(function(){
+				obj.onload=font;
+			})
+			//绘制函数
+			function font(){
+					ctx.beginPath();
+					var pattern=ctx.createPattern(obj,"repeat");
+//				var a=Object.prototype.toString.apply(pattern);
+//				console.log(a);
+					ctx.font="bold 40px Arial";
+					ctx.textAlign="center";
+					ctx.fillStyle=pattern;
+					ctx.fillText("我们都是好孩子",500,250);
+				}
+		</script>
+	</body>
+</html>

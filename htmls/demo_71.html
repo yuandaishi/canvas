@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>由远到近的效果</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	</head>
+	<body>
+		<p>按键盘上下箭头</p>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var w=canvas.width;
+				var h=canvas.height;
+				var numbers=100;
+				var f=450;
+				var vpx=w/2;
+				var vpy=h/2;
+				var vz=0;
+				var friction=0.98
+				var trees=[];
+				//定义树状图形
+				function tree(){
+					this.xpos=0;
+					this.ypos=0;
+					this.zpos=0;
+					this.vz=0;
+					this.vx=0;
+					this.vy=0;
+					this.scaleX=1;
+					this.scaleY=1;
+					this.x=vpx;
+					this.y=vpy;
+					this.color=["#000000","#00BFFF","#696969","#8B008B","#DA70D6","#FFFF00","#7B68EE","#6B8E23","#2F4F4F","#00BFFF"];
+					this.strokeStyle=this.color[Math.floor(Math.random()*10)];
+					this.line=[];
+					//定义树状结构
+					this.line[0]=120+Math.random()*30;
+					this.line[1]=80+Math.random()*20;
+					this.line[2]=Math.random()*160-80;
+					this.line[3]=40+Math.random()*20;
+					this.line[4]=100+Math.random()*20;
+					this.line[5]=Math.random()*160-80;
+					this.line[6]=60+Math.random()*20;
+				}
+				//定义树状图形绘制属性
+				tree.prototype.draw=function(ctx){
+					ctx.save();
+					ctx.translate(this.x,this.y);
+					ctx.scale(this.scaleX,this.scaleY);
+					ctx.beginPath();
+					ctx.moveTo(0,0);
+					ctx.lineTo(0,this.line[0]);
+					ctx.moveTo(0,this.line[1]);
+					ctx.lineTo(this.line[2],this.line[3]);
+					ctx.moveTo(0,this.line[4]);
+					ctx.lineTo(this.line[5],this.line[6]);
+					ctx.lineWidth=5;
+					ctx.strokeStyle=this.strokeStyle;
+					//console.log(ctx.fillStyle);
+					ctx.stroke();
+					ctx.restore();
+				}
+				//定义键盘事件
+				window.addEventListener('keydown',function(event){
+					if (event.keyCode === 38) {         //up
+          				vz -= 1;
+        			}else if (event.keyCode === 40) {  //down
+          				vz += 1;
+        			}
+     			}, false);
+				//树状图形移动函数,此函数也可以在键盘事件中写，但是把速度和这个事件分开，更利于维护。
+				function move(tree){
+					tree.zpos+=vz
+					if(tree.zpos>9550){
+						tree.zpos-=10000;//通过此让缩小到极限的树状图形归位，于是出现图形不间断的画面。其实就是这100个树状图形，仔细看就可以看出是重复运动
+					}else if(tree.zpos<-450){
+						tree.zpos+=10000;
+					}
+					var scale=f/(f+tree.zpos);
+					tree.scaleX=tree.scaleY=scale;
+					tree.x = vpx + tree.xpos * scale;
+       				tree.y = vpy + tree.ypos * scale;
+				}
+				function sortNum(a,b){
+					return(b.zpos-a.zpos)
+				};
+				//树状图形放入数组
+				for(i=0;i<numbers;i++){
+					var Tree=new tree();
+					  	Tree.xpos = Math.random() * 4000 - 2000;
+        				Tree.ypos = 150;
+        				Tree.zpos = Math.random() * 10000;
+						trees.push(Tree);
+				}
+				function Draw (a) {
+       				a.draw(ctx);
+      			}
+				//绘制图形
+				(function drawImg(){
+					con=window.requestAnimationFrame(drawImg,canvas);
+					ctx.clearRect(0,0,w,h);
+					trees.forEach(sortNum);
+					trees.forEach(move);
+					vz *= friction;
+					trees.forEach(Draw);
+				}())
+			})
+		</script>
+	</body>
+</html>

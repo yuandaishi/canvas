@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+				$(document).ready(function(){
+					var canvas=$("#canvas")[0];
+					var ctx=canvas.getContext("2d");
+					var a=Math.random()*1000;
+					var b=Math.random()*500;
+					var r=50;
+					var targetX=canvas.width/2;
+					var targetY=canvas.height/2;
+					var easing=0.05;
+					var isMouseDown=false;
+					var conditions=false;//条件开始的时候不成立
+				$("#canvas").mousedown(function(e){
+					//isMouseDown=true;
+					m=e.offsetX;
+					n=e.offsetY;
+					isIn=(m-a)*(m-a)+(n-b)*(n-b);
+					if(isIn<r*r){
+						conditions=true;//鼠标在球内点击时，条件成立
+					}
+				});
+				$("#canvas").mousemove(function(e){
+					xInstant=e.offsetX;
+					yInstant=e.offsetY;
+					if(conditions){
+						a=xInstant;
+						b=yInstant;
+					}
+				});
+				$("#canvas").mouseup(function(){
+					conditions=false;
+				});
+				(function draw(){
+					window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					if(!conditions){
+						var ax=(targetX-a)*easing;//通过(targetX-a)的值的正负，判断球的减速方向
+						var ay=(targetY-b)*easing;
+							a+=ax;
+							b+=ay;	
+					}
+					ctx.beginPath();
+					ctx.arc(a,b,r,0,Math.PI*2,true);
+					ctx.fillStyle="#007ED1";
+					ctx.fill();
+				}());
+			})
+		</script>
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<p>点击并拖动小球后松开</p>
+	</body>
+</html>

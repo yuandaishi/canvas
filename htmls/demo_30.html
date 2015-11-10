@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var arrX=[];
+		  	var arrY=[];
+		  	var arrA=[];
+		  	var arrB=[];
+		  	//以下for语句页面加载之后只执行一次
+		  	for(i=0;i<10;i++){
+		  		var x=Math.random()*1000|0;
+		  		var y=Math.random()*500|0;
+		  		arrX.push(x);
+		  		arrY.push(y);
+		  		var a=Math.random()*6-3;//保证速度可为正，也可以为负
+		  		var b=Math.random()*6-3;
+		  		arrA.push(a);
+		  		arrB.push(b);
+		  	};
+		  	(function draw(){
+		  		window.requestAnimationFrame(draw,canvas);
+		  		ctx.clearRect(0,0,1000,500);
+		  		for(i=0;i<10;i++){
+		  		arrX[i]+=arrA[i];
+		  		arrY[i]+=arrB[i];
+		  		ctx.beginPath();
+		  		ctx.arc(arrX[i],arrY[i],30,0,Math.PI*2,true);
+		  		ctx.closePath();
+		  		ctx.strokeStyle="#000000";
+		  		ctx.lineWidth=2;
+		  		ctx.stroke();
+		  		ctx.beginPath();
+		  		ctx.arc(arrX[i],arrY[i],29,0,Math.PI*2,true);
+		  		ctx.closePath();
+		  		ctx.strokeStyle="#000000";
+		  		ctx.fillStyle="#008200";
+		  		ctx.fill();
+		  		console.log(arrX[i]);
+		  		if(arrX[i]<30||arrX[i]>1030||arrY[i]<-30||arrY>530){
+		  			$("#one").val(i+"lose");
+		  		}
+		  	  	}
+		  	}())
+
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<input type="text" name="onr" id="one" value="" />
+	</body>
+</html>

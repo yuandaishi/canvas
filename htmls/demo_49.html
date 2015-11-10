@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var g=1,//重力加速度
+					arcX=Math.random()*1000,//球的初始横坐标也是绳子的初始顶端横坐标
+					arcY=Math.random()*500,//求得初始纵坐标也是绳子的初始顶端纵坐标
+					arcX_2=arcX,//第二个球初始位置
+					arcY_2=arcY,
+					arcX_3=arcX,//第三个球初始位置
+					arcY_3=arcY,
+					ropeX=arcX,
+					ropeY=arcY,
+					ropeX_2=arcX,//第二个球绳子顶端初始位置
+					ropeY_2=arcY,
+					ropeX_3=arcX,//第三个球绳子顶端初始位置
+					ropeY_3=arcY,
+					f=0.90,//摩擦系数
+					vx=0,//x轴初始速度
+					vy=0,//y轴初始速度
+					vx_2=0,
+					vy_2=0,
+					vx_3=0,
+					vy_3=0,
+					arcAx=0,//x轴初始加速度
+					arcAy=g,//y轴初始加速度
+					arcAx_2=0,
+					arcAy_2=g,
+					arcAx_3=0,
+					arcAy_3=g,
+					r=40,
+					canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d");
+					$("#canvas").mousemove(function(e){
+						ropeX=e.offsetX;
+						ropeY=e.offsetY;
+					});
+				(function darw(){
+					drawImage=window.requestAnimationFrame(darw,canvas);
+					ctx.clearRect(0,0,1000,500);
+					arcAx=(ropeX-arcX)/50;
+					arcAy=(ropeY-arcY)/50+g;
+					vx+=arcAx;
+					vy+=arcAy;
+					vx*=f;
+					vy*=f;
+					arcX+=vx;
+					arcY+=vy;
+					//
+					ropeX_2=arcX;
+					ropeY_2=arcY;
+					arcAx_2=(ropeX_2-arcX_2)/50;
+					arcAy_2=(ropeY_2-arcY_2)/50+g;
+					vx_2+=arcAx_2;
+					vy_2+=arcAy_2;
+					vx_2*=f;
+					vy_2*=f;
+					arcX_2+=vx_2;
+					arcY_2+=vy_2;
+					//
+					ropeX_3=arcX_2;
+					ropeY_3=arcY_2;
+					arcAx_3=(ropeX_3-arcX_3)/50;
+					arcAy_3=(ropeY_3-arcY_3)/50+g;
+					vx_3+=arcAx_3;
+					vy_3+=arcAy_3;
+					vx_3*=f;
+					vy_3*=f;
+					arcX_3+=vx_3;
+					arcY_3+=vy_3;
+					//
+				
+					ctx.beginPath();
+					ctx.save();
+					ctx.moveTo(ropeX,ropeY);
+					ctx.lineTo(arcX,arcY);
+					ctx.stroke();
+					//
+					ctx.beginPath();
+					ctx.moveTo(arcX,arcY);
+					ctx.lineTo(arcX_2,arcY_2);
+					ctx.stroke();
+					//
+					ctx.beginPath();
+					ctx.moveTo(arcX_2,arcY_2);
+					ctx.lineTo(arcX_3,arcY_3);
+					ctx.stroke();
+					//
+					ctx.beginPath();
+					ctx.save();
+					ctx.arc(arcX,arcY,r,0,Math.PI*2,true);
+					ctx.shadowColor="#001F33";
+					ctx.shadowBlur=5;
+					fillstyle=ctx.createRadialGradient(arcX,arcY,0,arcX,arcY,r);
+					fillstyle.addColorStop(0,"rgb(255,0,0)");
+					fillstyle.addColorStop(1,"rgb(50,0,0)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+					
+					//
+					ctx.beginPath();
+					ctx.arc(arcX_2,arcY_2,r,0,Math.PI*2,true);
+					ctx.shadowColor="#001F33";
+					ctx.shadowBlur=5;
+					fillstyle=ctx.createRadialGradient(arcX_2,arcY_2,0,arcX_2,arcY_2,r);
+					fillstyle.addColorStop(0,"rgb(255,255,0)");
+					fillstyle.addColorStop(1,"rgb(50,50,0)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+					
+					//
+					ctx.beginPath();
+					ctx.arc(arcX_3,arcY_3,r,0,Math.PI*2,true);
+					ctx.shadowColor="#001F33";
+					ctx.shadowBlur=5;
+					fillstyle=ctx.createRadialGradient(arcX_3,arcY_3,0,arcX_3,arcY_3,r);
+					fillstyle.addColorStop(0,"rgb(255,255,255)");
+					fillstyle.addColorStop(1,"rgb(50,50,50)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+					ctx.restore();
+//					if(arcAx_3<1&&arcAy_3<1){
+//						window.cancelAnimationFrame(drawImage,canvas);
+//					}
+//					console.log(arcY_2+"||"+arcY+"||"+arcY_3);
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

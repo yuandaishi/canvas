@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="500" height="500" style="border: 1px solid #CCCCCC;"></canvas>
+		<canvas id="canvasTwo" width="500" height="500" style="border: 1px solid #CCCCCC;"></canvas>
+	</body>
+	<script src="jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function(){
+			var canvas=$("#canvas")[0];
+			var ctx=canvas.getContext("2d");
+			var canvasTwo=$("#canvasTwo")[0];
+			var ctxTwo=canvasTwo.getContext("2d");
+			var image=new Image;
+			var k=4*canvas.width*canvas.height;
+			image.src="autumn.jpg";
+			image.onload=function(){
+				ctx.drawImage(image,0,0);
+				var imagedata=ctx.getImageData(0,0,canvas.width,canvas.height);
+				var pxdata=imagedata.data;
+				var dx=0;
+				var dy=0;
+				var speedX=10;//没次横排消失的像素；
+				var speedY=10;//每次竖排像失的像素； 
+				console.log(imagedata);
+				$("#canvas").mouseover(function(){
+					(function drawOne(){
+						stopOne=window.requestAnimationFrame(drawOne,canvas);
+						for(var j=0;j<4*speedX;j++){//像素点的rgba值对应的数据
+							for(var k=0;k<speedY;k++){
+								pxdata[4*(dx+k*canvas.width)+4*(dy*canvas.width)+j]=255;//其中可能会重复让某一些像素变为白色几次	
+							}
+						}
+						ctx.putImageData(imagedata,0,0,dx,dy,speedX,speedY);
+						ctxTwo.drawImage(image,dx,dy,speedX,speedY,dx,dy,speedX,speedY);
+						if(dx>=canvas.width){
+							dy+=speedY;
+							dx=-speedX;
+						}
+						dx+=speedX;
+					}());
+				})
+				$("#canvas").mouseleave(function(){
+					window.cancelAnimationFrame(stopOne);
+				})
+			};
+			//移动效果模拟
+		})
+	</script>
+</html>

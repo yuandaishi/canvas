@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var image=ctx.getImageData(0,0,1000,500);
+		  	var px=image.data;
+		  	$("#canvas").mousemove(function(e){
+		  		var x=e.offsetX;
+		  		var y=e.offsetY;
+		  		var a=4*(x+1000*y);
+		  		for(i=0;i<60;i++){
+		  			a+=4000;
+		  			px[a]=Math.random()*255|0;
+		  			px[a+1]=Math.random()*255|0;
+		  			px[a+2]=Math.random()*255|0;
+		  			px[a+3]=255;
+		  		}
+		  		ctx.putImageData(image,0,0);
+		  	})
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

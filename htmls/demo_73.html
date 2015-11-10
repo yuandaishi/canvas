@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>3D旋转</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var w=canvas.width;
+				var h=canvas.height;
+				var balls=[];
+				var f=250;
+				var numbers=50;
+				//定义球体
+				function ball(){
+					this.xpos=0;
+					this.ypos=0;
+					this.zpos=0;
+					this.vx=0;
+					this.vy=0;
+					this.vz=0;
+					this.x=0;
+					this.y=0;
+					this.scaleX=1;
+					this.scaleY=1;
+					this.radius=40;
+					this.R=Math.round(Math.random() * 255);
+					this.G=Math.round(Math.random() * 255);
+					this.B=Math.round(Math.random() * 255);	
+				}
+				//定义球体绘制属性
+				ball.prototype.draw=function(ctx){
+					ctx.save();
+					ctx.translate(this.x,this.y);
+					ctx.scale(this.scaleX,this.scaleY);
+					ctx.beginPath();
+					ctx.arc(0,0,this.radius,0,Math.PI*2,false);//圆心坐标要写为0和0，因为translate过。
+					ctx.shadowBlur=5;
+					fillstyle=ctx.createRadialGradient(0,0,0,0,0,this.radius);
+					fillstyle.addColorStop(0, "rgb(" + this.R + "," + this.G + "," + this.B + ")");
+					fillstyle.addColorStop(1, "rgb(60,60,60)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+					ctx.restore();
+				}
+				//重新定义每个球的位置
+				for(var i=0;i<numbers;i++){
+					Ball=new ball();
+					Ball.x=Math.random()*250+350;
+					Ball.y=Math.random()*300+100;
+					Ball.xpos=0;
+					Ball.ypos=0;
+					Ball.zpos=Math.random()*1500;
+					Ball.scaleX=f/(f+Ball.zpos);
+					Ball.scaleY=f/(f+Ball.zpos);
+					balls.push(Ball);
+				}
+				//鼠标在图形上的位置对应的转动速度
+				$("#canvas").mousemove(function(e){
+					var L=e.offsetX;
+					var K=L-500;
+					//console.log(L);
+					
+				})
+				//定义绘制函数
+				function Draw(ball){
+					ball.draw(ctx);
+				}
+				//排序函数
+				function sortNum(a,b){
+					return(b.zpos-a.zpos);
+				}
+				//绘制图形
+				(function drawImg(){
+					con=window.requestAnimationFrame(drawImg,canvas);
+					ctx.clearRect(0,0,w,h);
+					balls.sort(sortNum);
+					balls.forEach(Draw);
+					
+				}())
+			})
+		</script>
+	</body>
+</html>

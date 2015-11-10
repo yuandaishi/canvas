@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title></title>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	setInterval(function(){
+		  		var x=Math.floor(Math.random()*1000);
+		  		var y=Math.floor(Math.random()*500);
+		  		var r=Math.floor(Math.random()*100);
+		  		var zero=Math.floor(Math.random()*15);
+		  		var one=Math.floor(Math.random()*15);
+		  		var two=Math.floor(Math.random()*15);
+		  		var three=Math.floor(Math.random()*15);
+		  		var four=Math.floor(Math.random()*15);
+		  		var five=Math.floor(Math.random()*15);
+		  		var arr=["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+		  		var a=arr[zero];
+		  		var b=arr[one];
+		  		var c=arr[two];
+		  		var d=arr[three];
+		  		var e=arr[four];
+		  		var f=arr[five];
+		  		//console.log(n);
+		  		ctx.clearRect(0,0,1000,500);
+		  		ctx.beginPath();
+		  		ctx.arc(x,y,r,0,2*Math.PI,true);
+		  		ctx.closePath();
+		  		ctx.fillStyle="#"+a+b+c+d+e+f;
+		  		ctx.fill();
+		  	},500)
+		  })
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000px" height="500"></canvas>
+	</body>
+</html>

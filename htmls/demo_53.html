@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					f=0.9,
+					spring=0.07,
+					number=4,
+					lineH=150,
+					r=30,
+					arcX=[],
+					arcY=[],
+					vX=[],
+					vY=[],
+					aX=[],
+					aY=[],
+					a=0,
+					color=[],
+					angle=[],
+					isIn=false,
+					conditions=false;
+					//
+				for(i=0;i<number;i++){
+					arcX[i]=Math.random()*1000;
+					arcY[i]=Math.random()*500;
+					vX[i]=0;
+					vY[i]=0;
+					aX[i]=0;
+					aY[i]=0;
+				}
+				//取随机色
+				for(i=0;i<number;i++){
+					color[i]=Math.ceil(Math.random()*255);
+					color[i+1]=Math.ceil(Math.random()*255);
+					color[i+2]=Math.ceil(Math.random()*255);
+				};
+				$("#canvas").mouseup(function(){
+					conditions=false;
+				});
+				//
+				$("#canvas").mousedown(function(e){
+					var bk=true,
+						target_x=e.offsetX,
+						target_y=e.offsetY;
+					for(i=0;i<number;i++){
+						var isInBall=(target_x-arcX[i])*(target_x-arcX[i])+(target_y-arcY[i])*(target_y-arcY[i]);
+						if(bk&&isInBall<=r*r){
+							a=i;
+							isIn=true;
+							bk=false;
+							conditions=true;
+						}
+					}
+				});
+				//
+				$("#canvas").mousemove(function(e){
+					if(conditions&&isIn){
+						 	arcX[a]=e.offsetX,
+							arcY[a]=e.offsetY;
+					}
+				});
+				//
+				(function draw(){
+					con=window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,1000,500);
+					angle[0]=Math.atan2(arcY[0]-arcY[1],arcX[0]-arcX[1]);
+					angle[1]=Math.atan2(arcY[0]-arcY[2],arcX[0]-arcX[2]);
+					angle[2]=Math.atan2(arcY[1]-arcY[2],arcX[1]-arcX[2]);
+					aX[0]=(arcX[0]-arcX[1]-lineH*Math.cos(angle[0]))*spring;
+					aY[0]=(arcY[0]-arcY[1]-lineH*Math.sin(angle[0]))*spring;
+					aX[1]=(arcX[0]-arcX[2]-lineH*Math.cos(angle[1]))*spring;
+					aY[1]=(arcY[0]-arcY[2]-lineH*Math.sin(angle[1]))*spring;
+					aX[2]=(arcX[1]-arcX[2]-lineH*Math.cos(angle[2]))*spring;
+					aY[2]=(arcY[1]-arcY[2]-lineH*Math.sin(angle[2]))*spring;
+					vX[0]=-aX[0]-aX[1];
+					vY[0]=-aY[0]-aY[1];
+					vX[1]=aX[0]-aX[2];
+					vY[1]=aY[0]-aY[2];
+					vX[2]=aX[1]+aX[2];
+					vY[2]=aY[1]+aY[2];
+					vX[0]*=f;
+					vY[0]*=f;
+					vX[1]*=f;
+					vY[1]*=f;
+					vX[2]*=f;
+					vY[2]*=f;
+					arcX[0]+=vX[0];
+					arcX[1]+=vX[1];
+					arcX[2]+=vX[2];
+					arcY[0]+=vY[0];
+					arcY[1]+=vY[1];
+					arcY[2]+=vY[2];
+					for(i=0;i<number;i++){
+						if(i<2){
+							ctx.beginPath();
+							ctx.moveTo(arcX[i],arcY[i]);
+							ctx.lineTo(arcX[i+1],arcY[i+1]);
+							ctx.stroke();
+						}else{
+							ctx.beginPath();
+							ctx.moveTo(arcX[i],arcY[i]);
+							ctx.lineTo(arcX[i-2],arcY[i-2]);
+							ctx.stroke();
+						}
+					};
+					//
+					for(i=0;i<number;i++){
+						ctx.beginPath();
+						ctx.save();
+						ctx.arc(arcX[i],arcY[i],r,0,Math.PI*2,true);
+						//修饰部分
+						ctx.shadowBlur=5;
+						ctx.shadowColor="#0063CE";
+						fillstyle=ctx.createRadialGradient(arcX[i],arcY[i],0,arcX[i],arcY[i],r);
+						fillstyle.addColorStop(0,"rgb("+color[i]+","+color[i+1]+","+color[i+2]+")");
+						fillstyle.addColorStop(1,"rgb(60,60,60)");
+						ctx.fillStyle=fillstyle;
+						ctx.fill();
+						ctx.restore();
+					}
+					//console.log(conditions);
+				}())	
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

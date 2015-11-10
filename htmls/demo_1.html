@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function(){
+				var canvas=$("#one")[0];
+				ctx=canvas.getContext("2d");
+				canvas.addEventListener("mousedown",function(){
+					console.log("点击鼠标")
+					});
+				canvas.addEventListener("mouseup",function(){
+					console.log("松开")
+					});
+				canvas.addEventListener("click",function(event){
+					var x=event.offsetX;
+					var y=event.offsetY;
+					console.log("x:"+x+",y:"+y);
+				},false)
+				canvas.addEventListener("mousemove",function(){
+					console.log("mousemove");
+				},false)
+				$("body").keydown(function(event){
+					console.log(event.keyCode);
+				})
+			})
+			
+		</script>
+	</head>
+	<body>
+		<canvas id="one" width="500px" height="500px"></canvas>
+	</body>
+</html>

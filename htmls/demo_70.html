@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500">
+			
+		</canvas>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var h=canvas.height;
+				var	w=canvas.width;
+				var numbers=100;
+				var balls=[];
+				var g=0.2;
+				var f=400;
+				var bounce=-0.7;
+				var vpX = w/2;
+          		var	vpY = 50;
+          		//定义球
+				function ball(){
+					this.radius=Math.random()*5+3;
+					this.vx=Math.random()*6-3;
+					this.vy=Math.random()*6-3;
+					this.vz=Math.random()*6-3;
+					this.x=0;
+					this.y=0;
+					this.z=0;
+					this.xpos = 0;
+          			this.ypos = 0;
+          			this.zpos = 0;
+					this.R=Math.round(Math.random() * 255);
+					this.G=Math.round(Math.random() * 255);
+					this.B=Math.round(Math.random() * 255);	
+				}
+				//定义球的绘制属性
+				ball.prototype.draw=function(ctx){
+					this.xpos += this.vx;//没有碰撞
+					this.vy += g
+					this.ypos += this.vy;
+					this.zpos += this.vz;	//一直缩小或者放大
+					if(this.ypos+this.radius>=150){
+						this.ypos=150-this.radius;
+						this.vy*=bounce;
+					}else if(this.ypos-this.radius<=-150){
+						this.ypos=-150+this.radius;
+						this.vy*=bounce;
+					}
+					//控制被除数
+					if (this.zpos > -f) {
+          				var sca= f / (f + this.zpos);
+          					this.scaleX = this.scaleY = sca;
+         					this.x =vpX+this.xpos * sca;
+          					this.y = vpY+this.ypos * sca;
+          					this.visible = true;
+        					} else {
+         						 this.visible = false;
+        					}
+					if(this.visible){
+						ctx.save();										
+						ctx.translate(this.x,this.y);
+						ctx.scale(this.scaleX,this.scaleY);
+						ctx.beginPath();
+						ctx.arc(0,0,this.radius,0,Math.PI*2,true);
+						ctx.shaowBlur=3;
+						fillstyle=ctx.createRadialGradient(0,0,0,0,0,this.radius);
+						fillstyle.addColorStop(0, "rgb(" + this.R + "," + this.G + "," + this.B + ")");
+						fillstyle.addColorStop(1, "rgb(60,60,60)");
+						ctx.fillStyle=fillstyle;
+						ctx.fill();
+						ctx.closePath();
+						ctx.restore();
+					}	
+				}
+				//把球体放入数组中
+				for(i=0;i<numbers;i++){
+					Ball=new ball();
+					balls.push(Ball);
+				}
+				//绘制图形属性函数化
+				function drawBall(ball){
+					ball.draw(ctx);
+				}
+				//比较大小函数
+				function sortNumber(a,b){
+					return b.zpos-a.zpos;
+				}
+				//开始绘制图形
+				(function drawImage(){
+					con=window.requestAnimationFrame(drawImage,canvas);
+					ctx.clearRect(0,0,w,h);
+					balls.sort(sortNumber);
+					balls.forEach(drawBall);
+				}())
+			})
+		</script>
+	</body>
+</html>

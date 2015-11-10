@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0];
+				var ctx=canvas.getContext("2d");
+				var a=50;
+				var b=50;
+				var r=50;
+				var easing=0.04;
+				var targetX=a;
+				var targetY=b;
+				$("#canvas").mousemove(function(e){
+					targetX=e.offsetX;
+					targetY=e.offsetY;
+				});
+				(function draw(){
+					conditions=window.requestAnimationFrame(draw,canvas);
+					vx=(targetX-a)*easing;
+					vy=(targetY-b)*easing;
+//					if(Math.abs(vx)<0.04&&Math.abs(vy)<0.04){
+//						window.cancelAnimationFrame(conditions);
+//						a=targetX;
+//						b=targetY;
+//					}
+					a+=vx;
+					b+=vy;
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					ctx.beginPath();
+					ctx.arc(a,b,r,0,Math.PI*2,true);
+					ctx.fillStyle="#FF0000";
+					ctx.fill();
+					console.log(a)
+				}())
+			})
+		</script>
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

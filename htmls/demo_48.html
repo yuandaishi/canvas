@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>时钟</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				//定义变量
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					a=-Math.PI/6,
+					b=-Math.PI/30,
+					r=180,
+					time=new Date(),
+					angleS=time.getSeconds(),
+					angleM=time.getMinutes(),
+					angleH=time.getHours(),
+					//秒针初始角度,数字15和后面的角度取值有关,懒得计算，可以对着页面调出来
+					sec=Math.PI/30*(angleS+15),
+					//秒针每秒中转过的角度
+					secAngle=Math.PI/30,
+					//分针初始角度,
+					m=Math.PI/30*((angleM+angleS/60)+15),//angleS/60 这个数据是为了避免类似10分59秒分针指的位置是10的情况
+					//分针每秒中转过的角度
+					mAngle=Math.PI/1800,
+					//时针初始角度,
+					h=Math.PI/12*(angleH+(angleM/60)+15),
+					//时针每秒中转过的角度
+					hAngle=Math.PI/10800,
+					br=2;//小整点圆的半径
+				//写汉字部分
+					ctx.save();
+					ctx.fillStyle="#0070A9";
+					ctx.font="30px sans-serif";
+					ctx.shadowBlur="5";
+					ctx.shadowColor="#0033CC";
+					ctx.shadowOffsetX="5";
+					ctx.shadowOffsetY="5";
+					ctx.fillText("自制时钟",50,50);
+				//输出当前时间
+				setInterval(function(){
+					var time=new Date(),
+					Y=time.getFullYear(),
+					M=time.getMonth(),
+					D=time.getDate(),
+					H=time.getHours(),
+					m=time.getMinutes(),
+					S=time.getSeconds();
+					$("#input").val(Y+"年"+(M+1)+"月"+D+"日"+H+"时"+m+"分"+S+"秒");
+				},1000);
+				//没隔一秒钟进行一次重新绘制
+				setInterval(function(){
+					ctx.restore();
+					ctx.clearRect(300,13,687,450);//每隔一秒钟重新绘制的区域
+					//画时钟的外圈	
+					ctx.save();
+					ctx.beginPath();
+					ctx.strokeStyle="#006AA9";
+					ctx.lineWidth=20;
+					ctx.shadowBlur="10";
+					ctx.shadowColor="#006699";
+					ctx.shadowOffsetX="0";
+					ctx.shadowOffsetY="0";
+					ctx.arc(500,250,r,0,Math.PI*2,true);
+					ctx.stroke();
+					//画60个小圆形；
+					for(i=0;i<60;i++){
+						b+=Math.PI/30;
+						var bigX=500-180*Math.cos(b);
+						var bigY=250-180*Math.sin(b);
+						ctx.beginPath();
+						ctx.arc(bigX,bigY,br,0,Math.PI*2,true);
+						ctx.fillStyle="#333333";
+						ctx.fill();
+					}
+					//画12个小三角整点
+					ctx.restore();
+					ctx.save();
+					for(i=0;i<12;i++){ 
+						a+=Math.PI/6;
+						var sanAx=500-187*Math.cos(a+Math.PI/100);//用187，使三角形起点往圆外围移动,Math.PI/100使三角形A,B端点往两边移动
+						var sanAy=250-187*Math.sin(a+Math.PI/100);
+						var sanBx=500-187*Math.cos(a-Math.PI/100);
+						var sanBy=250-187*Math.sin(a-Math.PI/100);
+						var sanCx=500-175*Math.cos(a);//用175，C点在里面
+						var sanCy=250-175*Math.sin(a);
+						ctx.beginPath();										
+						ctx.moveTo(sanAx,sanAy);
+						ctx.lineTo(sanBx,sanBy);
+						ctx.lineTo(sanCx,sanCy);
+						ctx.closePath();
+						ctx.fillStyle="#512D5D";
+						ctx.fill();		
+					}
+					//画时针
+					h+=hAngle;
+					ctx.save();
+					var hAx=500+30*Math.cos(h+Math.PI/30);
+					var hAy=250+30*Math.sin(h+Math.PI/30);
+					var hBx=500+30*Math.cos(h-Math.PI/30);
+					var hBy=250+30*Math.sin(h-Math.PI/30);
+					var hCx=500-90*Math.cos(h);
+					var hCy=250-90*Math.sin(h);
+					ctx.beginPath();
+					ctx.moveTo(hAx,hAy);
+					ctx.lineTo(hBx,hBy);
+					ctx.lineTo(hCx,hCy);
+					ctx.closePath();
+					ctx.fillStyle="#222222";
+					ctx.fill();	
+						//画分针
+					m+=mAngle;
+					ctx.save();
+					var mAx=500+40*Math.cos(m+Math.PI/50);
+					var mAy=250+40*Math.sin(m+Math.PI/50);
+					var mBx=500+40*Math.cos(m-Math.PI/50);
+					var mBy=250+40*Math.sin(m-Math.PI/50);
+					var mCx=500-120*Math.cos(m);
+					var mCy=250-120*Math.sin(m);
+					ctx.beginPath();
+					ctx.moveTo(mAx,mAy);
+					ctx.lineTo(mBx,mBy);
+					ctx.lineTo(mCx,mCy);
+					ctx.closePath();
+					ctx.fillStyle="#006633";
+					ctx.fill();	
+					//画秒针
+					sec+=secAngle;
+					ctx.save();
+					var secAx=500+50*Math.cos(sec+Math.PI/70);
+					var secAy=250+50*Math.sin(sec+Math.PI/70);
+					var secBx=500+50*Math.cos(sec-Math.PI/70);
+					var secBy=250+50*Math.sin(sec-Math.PI/70);
+					var secCx=500-150*Math.cos(sec);
+					var secCy=250-150*Math.sin(sec);
+					ctx.beginPath();
+					ctx.moveTo(secAx,secAy);
+					ctx.lineTo(secBx,secBy);
+					ctx.lineTo(secCx,secCy);
+					ctx.closePath();
+					ctx.fillStyle="#512D5D";
+					ctx.fill();	
+					//画中心圆
+					ctx.restore();
+					ctx.save();
+					ctx.beginPath();
+					ctx.arc(500,250,7,0,Math.PI*2,true);
+					ctx.fillStyle="#006AA9";
+					ctx.fill();
+					ctx.restore();
+				},1000)
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500">
+		</canvas>
+		<input type="text" name="autodelinput" id="input" value="" style="position: absolute;left: 200px;top: 40px;width: 200px;"/>
+	</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+					ctx=canvas.getContext("2d"),
+					targetX=Math.random()*1000,
+					targetY=Math.random()*500,
+					arcX_1=Math.random()*1000,
+					arcY_1=Math.random()*500;
+					con=[];
+					$("#canvas").mousemove(function(e){
+							targetX=e.offsetX;
+							targetY=e.offsetY;
+					});
+				(function draw(){
+					conditions=window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,1000,500);
+					//
+					ctx.save();
+					ctx.beginPath();
+					ctx.strokeRect(arcX_1-50,arcY_1-50,100,100);
+					ctx.beginPath();
+					ctx.arc(arcX_1,arcY_1,50,0,Math.PI*2,true);
+					ctx.fillStyle="#FF0000";
+					ctx.fill();
+					ctx.restore();
+					//
+					ctx.beginPath();
+					ctx.save();
+					ctx.strokeRect(targetX-50,targetY-50,100,100);
+					ctx.beginPath();
+					ctx.arc(targetX,targetY,50,0,Math.PI*2);
+					con[0]=function (arcX_1,arcY_1,targetX,targetY){
+						return !(arcX_1+100<targetX||
+							   	 arcY_1+100<targetY||
+							  	 targetX+100<arcX_1||
+							   	 targetY+100<arcY_1);
+					}
+					if(con[0](arcX_1,arcY_1,targetX,targetY)){
+						ctx.fillStyle="#001F33"
+						ctx.fill();
+						ctx.restore();
+					}else{
+						ctx.fillStyle="#0000FF"
+						ctx.fill();
+						ctx.restore();
+					}
+					console.log(con[0](arcX_1,arcY_1,targetX,targetY));
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

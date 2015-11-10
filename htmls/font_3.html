@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="gb2312">
+		<title>font样式</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500">
+			对不起，您的浏览器不支持canvas标签
+		</canvas>
+		<script type="text/javascript" src="js/jquery.js">
+			
+		</script>
+		<script type="text/javascript">
+                var obj;
+                var ctx;
+                function font(){
+					ctx.beginPath();
+					var pattern=ctx.createPattern(obj,"repeat");
+//				var a=Object.prototype.toString.apply(pattern);
+//				console.log(a);
+					ctx.font="bold 40px Arial";
+					ctx.fillStyle=pattern;
+					ctx.fillText("HHHHHHHH",500,250);
+				}
+			jQuery(document).ready(function(){
+				var canvas=jQuery("#canvas")[0];
+				ctx=canvas.getContext("2d");
+				obj=new Image();
+				obj.src="images/picture.jpg";
+				obj.onload=font;
+			})
+			//绘制函数
+			
+		</script>
+	</body>
+</html>

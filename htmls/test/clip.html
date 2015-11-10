@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>clip效果</title>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<style type="text/css">
+			#canvas{
+				background-image: url(../images/linboli.jpg);
+				background-position: center;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<script src="../js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				(function draw(){
+					con=window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					ctx.fillStyle="#000000";
+					ctx.fillRect(0,0,canvas.width,canvas.height);
+					arc(ctx,arcX,arcY,radius,vx,vy);
+				}());	
+			})
+			//定义变量
+			var canvas=$("#canvas")[0];
+			var ctx=canvas.getContext("2d");
+			var arcX=Math.random()*1000|0;
+			var arcY=Math.random()*500|0;
+			var vx=Math.random()*6-3;
+			var vy=Math.random()*6-3;
+			var radius=Math.random()*40+80;
+			var bounce=-1;
+			//绘制圆形函数，限定clip区域。
+			function arc(){
+				arcX+=vx;
+				arcY+=vy;
+				if(arcX>=canvas.width-radius){
+					arcX=canvas.width-radius;
+					vx*=bounce;
+				}
+				if(arcX<=radius){
+					arcX=radius;
+					vx*=bounce;
+				}
+				if(arcY>=canvas.height-radius){
+					arcY=canvas.height-radius;
+					vy*=bounce;
+				}
+				if (arcY<=radius) {
+					arcY=radius
+					vy*=bounce;
+				}
+				ctx.save()
+				ctx.beginPath();
+				ctx.arc(arcX,arcY,radius,0,Math.PI*2,false);
+				ctx.fillStyle="#ffffff";
+				ctx.fill();
+				ctx.clip();
+				//渲染文字
+				ctx.font="bold 200px Arial";
+				ctx.textAlign="center";
+				ctx.textBaseline="middle";
+				ctx.fillStyle="#E17806";
+				ctx.fillText("笨",canvas.width/2,canvas.height/2);
+				ctx.restore();
+			}
+		</script>
+	</body>
+</html>

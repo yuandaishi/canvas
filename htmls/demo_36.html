@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+		$(document).ready(function(){
+			var canvas=$("#canvas")[0];
+			var ctx=canvas.getContext("2d");
+				conditions=false; 
+				a=500;
+				b=250;
+				ctx.beginPath();
+				ctx.arc(a,b,50,0,Math.PI*2,true);
+				ctx.closePath();
+				ctx.fillStyle="#107B8B";
+				ctx.fill();
+				window.addEventListener("mousedown",function(e){
+					conditions=true;//判断移动的时候，鼠标是否处于点击状态
+					m=e.offsetX;
+					n=e.offsetY;
+					console.log(m);//只是在放下去的一瞬间的那个值，mousedown是一个点状动作，而不是一个持续性的动作
+				})
+				window.addEventListener("mouseup",function(e){
+					conditions=false;//判断移动的时候，鼠标是否处于点击状态
+				})	
+				window.addEventListener("mousemove",function(event){
+					x=event.offsetX;
+					y=event.offsetY;
+					k=(x-a)*(x-a)+(y-b)*(y-b);
+					if(conditions&&(k<2500)){
+						a=x;
+						b=y;
+						//console.log(a);
+					}
+				});
+				(function draw(){
+					window.requestAnimationFrame(draw,canvas);
+					ctx.clearRect(0,0,1000,500);
+					ctx.beginPath();
+					ctx.arc(a,b,50,0,Math.PI*2,true);
+					ctx.closePath();
+					ctx.fillStyle="#107B8B";
+					ctx.fill();
+				}())
+		})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

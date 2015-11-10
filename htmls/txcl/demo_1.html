@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="1219" height="800" style="border: 1px solid #CCCCCC;display: block;margin: 50px auto;"></canvas>
+	</body>
+	<script src="../js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function(){
+			var canvas=$("#canvas")[0];
+			var ctx=canvas.getContext("2d");
+			var images=new Image()
+			images.src="img-lg.jpg";
+			images.onload=function(){
+				ctx.drawImage(images,0,0,1219,800);
+				$("#canvas").mousemove(function(e){
+					var x=e.offsetX;
+					var y=e.offsetY;
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					ctx.drawImage(images,0,0,1219,800);
+					ctx.beginPath();
+					ctx.strokeStyle="red";
+					ctx.strokeRect(x-30,y-30,60,60);
+					var dx=(images.width-canvas.width)/2;
+					var dy=(images.height-canvas.height)/2;
+					ctx.drawImage(canvas,(x-30),(y-30),60,60,x+30,y-90,180,180)
+				})
+			};
+		})
+	</script>
+</html>

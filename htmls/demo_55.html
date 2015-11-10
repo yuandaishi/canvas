@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var canvas = document.getElementById('canvas'),
+					context = canvas.getContext('2d'),
+					boxes = [],
+					activeBox = createBox()
+					window.utils = {},
+					gravity = 0.2;
+				
+				Box.prototype.draw = function (context) {
+ 					 context.save();
+  					 context.translate(this.x, this.y);
+  					 context.rotate(this.rotation);
+  					 context.scale(this.scaleX, this.scaleY);
+
+  					 context.lineWidth = this.lineWidth;
+ 					 context.fillStyle = this.color;
+ 					 context.beginPath();
+     				 context.rect(0, 0, this.width, this.height);
+ 					 context.closePath();
+ 					 context.fill();
+  					 if (this.lineWidth > 0) {
+   					 	context.stroke();
+ 				 	 }
+  				 	context.restore();
+			    };
+				
+				function Box(){
+					this.x=0;
+					this.y=0;
+					this.ax=0;
+					this.ay=0;
+					this.vx=0;
+					this.vy=0;
+					this.width=Math.random()*40+10;
+					this.height=Math.random()*40+10;
+				}
+				function createBox() {
+					var box = new Box();
+					box.x = Math.random() * (canvas.width-50);
+					boxes.push(box);
+					return box;
+				}
+
+				window.utils.intersects = function (rectA, rectB) {
+  				return !(rectA.x + rectA.width < rectB.x ||
+           				rectB.x + rectB.width < rectA.x ||
+           				rectA.y + rectA.height < rectB.y ||
+           				rectB.y + rectB.height < rectA.y);
+				};
+
+				function drawBox(box) {
+					if (activeBox !== box && utils.intersects(activeBox, box)) {
+						activeBox.y = box.y - activeBox.height;
+						activeBox = createBox();
+					}
+					box.draw(context);
+				}
+
+				(function drawFrame() {
+					window.requestAnimationFrame(drawFrame, canvas);
+					context.clearRect(0, 0, canvas.width, canvas.height);
+
+					activeBox.vy += gravity;
+					activeBox.y += activeBox.vy;
+
+					if (activeBox.y + activeBox.height > canvas.height) {
+						activeBox.y = canvas.height - activeBox.height;
+						activeBox = createBox();
+					}
+					boxes.forEach(drawBox);
+				}());
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

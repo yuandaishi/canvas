@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" charset="utf-8" src="js/jquery-1.10.2.min.js">
+		  
+		</script>
+		<script type="text/javascript" charset="utf-8">
+		//理解上的错误，其实并不是如看见的一样从一个点移动到另外的一个点，而是整个canvas都是处于重新绘制的状态。
+		//旋转多少度，移动多少距离，就形成了下一个图形、
+		  $(document).ready(function(){
+		  	var canvas=$("#canvas")[0];
+		  	var ctx=canvas.getContext("2d");
+		  	var size=5;//移动的速度;
+		  	//var angle=0;
+		  		ctx.save();
+		  		ctx.translate(500,250);
+		  		ctx.beginPath();
+		  		ctx.moveTo(0,-25);
+		  		ctx.lineTo(25,0);
+		  		ctx.lineTo(0,25);
+		  		ctx.lineTo(-25,0);
+		  		ctx.closePath();
+		  		ctx.fillStyle="#003300";
+		  		ctx.fill();
+		  		ctx.restore()
+		  		$("#canvas").mousemove(function(e){
+		  			var x0=e.offsetX;//相对canvas的左上角
+		  			var y0=e.offsetY;//相对cvavas的左上角
+		  			//console.log(x0);
+		  			var x1=x0-500;//刚开始移动鼠标时，相对于点（500，250）的坐标
+		  			var y1=250-y0;
+		  			var angle=Math.atan2(y1,x1);
+		  			var xv=Math.sin(angle)*size;
+		  			var yv=Math.cos(angle)*size;
+		  			ctx.clearRect(0,0,1000,500);
+		  			ctx.save();
+		  			setInterval(function(){
+		  				
+		  			},20)
+		  			ctx.translate(x0,y0);
+		  			ctx.rotate(angle);
+		  			ctx.beginPath();
+		  			//作图开始
+		  		ctx.moveTo(0,-25);
+		  		ctx.lineTo(25,0);
+		  		ctx.lineTo(0,25);
+		  		ctx.lineTo(-25,0);
+		  		ctx.closePath();
+		  		ctx.fillStyle="#003300";
+		  		ctx.fill();
+		  			//作图结束
+		  			ctx.restore();
+		  		})
+		  })
+		</script>
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+	</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvasOne" width="1024" height="500" style="border: 1px solid #CCCCCC;display: block;margin: 20px auto;"></canvas>
+	</body>
+	<script src="jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function(){
+			var canvasOne=$("#canvasOne")[0];
+			var ctxOne=canvasOne.getContext("2d");
+			var image=new Image;
+			var dx=(1024-700)/2;
+			var dy=(500-467)/2
+			var con=false;
+			var r=100;
+			image.src="img-lg.jpg";
+			image.onload=function(){
+				ctxOne.drawImage(image,dx,dy,700,467);
+				scale=image.width/700;
+			}
+			$("#canvasOne").mousedown(function(){
+				con=true;
+			})
+			$("#canvasOne").mouseup(function(){
+				con=false;
+				ctxOne.clearRect(0,0,canvasOne.width,canvasOne.height);
+				ctxOne.drawImage(image,dx,dy,700,467);
+			})
+			$("#canvasOne").bind("mousedown mousemove",function(e){
+				var x=e.offsetX-dx;
+				var y=e.offsetY-dy;
+				//console.log(x+"||"+y);
+				if(con){
+					ctxOne.clearRect(0,0,canvasOne.width,canvasOne.height);
+					ctxOne.drawImage(image,dx,dy,700,467);
+					ctxOne.save()
+					ctxOne.strokeStyle="#008855";
+					ctxOne.lineWidth=5;
+					ctxOne.beginPath();
+					ctxOne.arc(e.offsetX,e.offsetY,100,0,Math.PI*2,true);
+					ctxOne.stroke();
+					ctxOne.clip();
+					ctxOne.drawImage(image,scale*x-r,scale*y-r,2*r,2*r,(e.offsetX-r),(e.offsetY-r),2*r,2*r);
+					ctxOne.restore();
+				}
+			})
+		})
+	</script>
+</html>

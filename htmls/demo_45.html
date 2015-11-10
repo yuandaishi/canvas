@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="js/jquery-1.10.2.min.js">
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var canvas=$("#canvas")[0],
+				    ctx=canvas.getContext("2d"),
+				    //g=1.5,//相当于重力加速度
+				    targetX=Math.random()*1000,
+				    targetY=Math.random()*500,
+				    arcX=targetX,
+				    arcY=targetY+150,
+				    r=50,
+				    vx=0,
+				    vy=0;
+				$("#canvas").mousemove(function(e){
+					targetX=e.offsetX;
+					targetY=e.offsetY;
+				});
+				(function drawImage(){
+					conditions=window.requestAnimationFrame(drawImage,canvas);
+					ax=(targetX-arcX)/100;
+//					相当于重力加速度等于150/100;
+					ay=(targetY-arcY+150)/100; 
+					vx+=ax;
+					vy+=ay;
+					vx*=0.97;
+					vy*=0.97;
+					arcX+=vx;
+					arcY+=vy;
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					ctx.moveTo(targetX,targetY);
+					ctx.lineTo(arcX,arcY);
+					ctx.stroke();
+					ctx.beginPath();
+					ctx.arc(arcX,arcY,r,0,Math.PI*2,true);
+					ctx.shadowColor="rgba(100,100,100,1)";
+					ctx.shadowBlur=20;
+					fillstyle=ctx.createRadialGradient(arcX,arcY,0,arcX,arcY,r);
+					fillstyle.addColorStop(0,"rgb(255,0,0)");
+					fillstyle.addColorStop(1,"rgb(50,0,0)");
+					ctx.fillStyle=fillstyle;
+					ctx.fill();
+					//console.log(arcX);
+				}())
+			})
+		</script>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="500"></canvas>
+		<p>假设弹性绳子的原来长度为0的时候可以这样写，若原来弹性绳子的长度不是0，这样写就不对</p>
+	</body>
+</html>

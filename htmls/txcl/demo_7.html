@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			canvas{
+				border: 1px solid #cccccc;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvasOne" width="500" height="500"></canvas>
+		<canvas id="canvasTwo" width="500" height="500"></canvas>
+	</body>
+	<script src="jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function(){
+			var canvasOne=$("#canvasOne")[0];
+			var ctxOne=canvasOne.getContext("2d");
+			var canvasTwo=$("#canvasTwo")[0];
+			var ctxtwo=canvasTwo.getContext("2d");
+			var r=10;//初始的半径长度
+			var speedR=5;//每次增长的半径
+			var image=new Image;
+				image.src="autumn.jpg";
+			image.onload=function(){
+				ctxOne.drawImage(image,0,0);
+//				var imgdata=ctxOne.getImageData(0,0,canvasOne.width,canvasOne.height);
+//				var pixdata=imgdata.data;
+				$("#canvasOne").mouseover(function(){
+					(function drawOne(){
+						stopOne=window.requestAnimationFrame(drawOne,canvasOne);
+						ctxOne.clearRect(0,0,500,500);
+						ctxOne.drawImage(image,0,0);
+						var imgdata=ctxOne.getImageData(0,0,canvasOne.width,canvasOne.height);
+						var pixdata=imgdata.data;
+						for(var x=250-r;x<250+r;x++){//横坐标
+							var dy=Math.floor(Math.sqrt(r*r-(x-250)*(x-250)));
+							for(y=250-dy;y<250+dy;y++){//纵坐标
+//								pixdata[4*(500*(y-1)+x)+0]=255;
+//								pixdata[4*(500*(y-1)+x)+1]=255;
+//								pixdata[4*(500*(y-1)+x)+2]=255;
+//								pixdata[4*(500*(y-1)+x)+3]=255;
+								var R=pixdata[4*(500*(y-1)+x)+0];
+								var g=pixdata[4*(500*(y-1)+x)+1];
+								var b=pixdata[4*(500*(y-1)+x)+2];
+								var grey=r*0.3+g*0.59+b*0.11;
+								pixdata[4*(500*(y-1)+x)+0]=grey;
+								pixdata[4*(500*(y-1)+x)+1]=grey;
+								pixdata[4*(500*(y-1)+x)+2]=grey;
+							}
+						}
+						ctxOne.putImageData(imgdata,0,0);//整张图重绘，而不是重绘变成白色的部分，不是最好的效果
+						r+=speedR;
+						if(r>=250){
+							r=250
+						}
+					}())
+				})
+				$("#canvasOne").mouseleave(function(){
+					window.cancelAnimationFrame(stopOne);
+				})
+			}
+		}())
+	</script>
+</html>
