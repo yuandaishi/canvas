@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>控制像素</title>
+		<script src="js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			#canvas{
+				display: block;
+				margin: 20px auto;
+				border: 1px solid violet;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="800" height="600"></canvas>
+	</body>
+	<script type="text/javascript">
+		$(function(){
+			var img=new Image();
+			var canvas=$("#canvas")[0];
+			var ctx=canvas.getContext("2d");
+			img.src="img/3-1.jpg";
+			img.onload=function(){
+				drawImg(img,ctx,0,0);
+			}
+			$("#canvas").click(function(){
+				console.log(drawPx);
+				drawPx.prototype.draw_2();
+			})
+		})
+		function drawImg(img,ctx,xStrat,yStart,xEnd,yEnd){
+			ctx.drawImage(img,xStrat,yStart);
+		}
+		var drawPx={};
+		drawPx.prototype={
+			draw_1:function(){
+				console.log("1");
+			},
+			draw_2:function(){
+				console.log("2");
+			},
+			draw_3:function(){
+				console.log("3");
+			}
+		}
+	</script>
+</html>

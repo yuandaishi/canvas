@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>线条了</title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="800"></canvas>
+	</body>
+	<script src="../../js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function(){
+			var canvas=$("#canvas")[0];
+			var ctx=canvas.getContext("2d");
+			ctx.moveTo(200,200);
+			ctx.lineTo(366,444);
+			ctx.strokeStyle="palevioletred";
+			ctx.stroke();
+			ctx.lineTo(455,666);
+			ctx.strokeStyle="blue";
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.arc(300,300,30,0,Math.PI*2,true);
+			ctx.stroke();
+		})
+	</script>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>贪吃蛇</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#canvas{
+				border: 1px solid saddlebrown;
+				background: #333333;
+				margin: 50px auto;
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="800" height="800"></canvas>
+	</body>
+	<script src="jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//重要思想：在canvas里，我们不能像访问dom一样去访问我们绘画的每个元素，但是我们在绘画每个元素的过程中，都要给对应的元素相应的信息，比如
+		//边长、起点坐标、初始速度等等，我们就可以吧这些信息当成是这个元素，其实我们访问dom元素主要也是为了获取元素的信息，可以说只要有了相应
+		//的信息，就有了相应的元素，代码是通过数据来呈现实体元素的，有数据，就能创建实例
+		
+		//碰撞--数组第一个和最后一个判断
+		//注明：贪吃蛇不能回头
+		
+		//问题1：有可能初始的两个方块重叠
+		//问题2：有可能新生的滑块在snake的范围内
+		var canvas=$("#canvas")[0];
+		var ctx=canvas.getContext("2d");
+		var len=20;//方块边长
+		var width=canvas.width;//canvas的宽度
+		var velocity=20;//贪吃蛇速度，和滑块宽度一样
+		var square_arr=[];//移动中的滑块数组
+		var record_arr=[];//转向时的坐标和速度数组
+		var con=true;//判断是否是第一个方块
+		$(function(){//一开始会出现两个滑块
+			var square_ob=new square_obj();
+			var square_ob_2=new square_obj();
+			square_arr.push(square_ob);
+			square_arr.push(square_ob_2);
+			//console.log(square_arr);
+				timer=setInterval(function(){
+					ctx.clearRect(0,0,width,width);
+					square_arr.forEach(function(item,index,array){//方块绘制
+						item.draw();
+					});
+					crash_con=crash(square_arr[square_arr.length-2].num_w,square_arr[square_arr.length-2].num_h,square_arr[square_arr.length-1].num_w,square_arr[square_arr.length-1].num_h,len,square_arr[square_arr.length-2].vx,square_arr[square_arr.length-2].vy);//滑块数组中倒数第二块和最后一块是否碰撞
+					//console.log(crash_con);
+					if(crash_con){//如果碰上的话，创建新的滑块对象，并加入数组尾部
+						square_arr[square_arr.length-1].vx=square_arr[square_arr.length-2].vx;//如果碰撞上的话，则速度继承
+						square_arr[square_arr.length-1].vy=square_arr[square_arr.length-2].vy;
+						var squareObj=new square_obj();
+						square_arr.push(squareObj);
+					}
+					for(var i=(square_arr.length-3);i>=0;i--){//倒数第三块开始监听
+						for(var j=0;j<record_arr.length;j++){
+							//console.log(square_arr[i].num_w+"||"+record_arr[j][0]+"||"+square_arr[i].num_h+"||"+record_arr[j][1]);
+							if(square_arr[i].num_w==record_arr[j][0]&&square_arr[i].num_h==record_arr[j][1]){
+								square_arr[i].move_action(record_arr[j]);
+								if(i==0&&j==0){//i=0表示最后一个滑块也经过了记录的坐标，则此时可以把该坐标从数组中移除
+									record_arr.shift();
+									console.log(record_arr);
+								}
+								return false;//一个时间点的坐标只能有一个，如果相同，则不需要进行后面的循环
+							}
+						}
+					}
+					square_arr[square_arr.length-2].check_collision();
+					//console.log("jjj");
+				},200);
+			$(document).keydown(function(event){
+				var k=event.keyCode;
+				if(k==37||k==38||k==39||k==40){
+					event.preventDefault();//阻止点击时，屏幕滚动
+					var turn_to_con=turn_to(k,square_arr[square_arr.length-2]);//判断是否转向
+					square_arr[square_arr.length-2].move_direction(k);
+					if(turn_to_con&&(square_arr.length>2)){//滑块数大于2时
+						record(square_arr[square_arr.length-2]);//转向时，记录转向的坐标和方向
+					}	
+					crash_con=crash(square_arr[square_arr.length-2].num_w,square_arr[square_arr.length-2].num_h,square_arr[square_arr.length-1].num_w,square_arr[square_arr.length-1].num_h,len,square_arr[square_arr.length-2].vx,square_arr[square_arr.length-2].vy);//滑块数组中倒数第二块和最后一块是否碰撞
+					if(crash_con){//键盘事件时进行如下判断
+						square_arr[square_arr.length-1].vx=square_arr[square_arr.length-2].vx;//如果碰撞上的话，则速度继承
+						square_arr[square_arr.length-1].vy=square_arr[square_arr.length-2].vy;
+					}
+				}
+			})
+		})
+		
+		var square_obj=function(){//创建方块对象(所有方块共有的属性)，方块的坐标有限定，不是随意的，应该是边长的倍数
+			var _this=this;
+			this.num_w=20*Math.floor(Math.random()*(width/len));//横坐标
+			this.num_h=20*Math.floor(Math.random()*(width/len));//纵坐标
+			//console.log(this.num_w+"||"+this.num_h);
+			this.length=len;//边长
+			this.fillstyle=color();//填充颜色
+			this.vx=0;//默认值为0，要不然新建方块的时候，this.num_w+=this.vx的值为nan
+			this.vy=0;
+			if(con){//并且如果是第一块的话，立即进行移动
+				var k=Math.round(Math.random()*3);//通过1,2,3,4,判断滑块的初始移动方向
+				switch (k){
+					case 0:
+						this.vx=velocity;//right
+						this.vy=0;
+						break;
+					case 1:
+						this.vx=-(velocity);//left
+						this.vy=0;
+						break;
+					case 2:
+						this.vy=velocity;//dowm
+						this.vx=0;
+						break;
+					case 3:
+						this.vy=-(velocity);//up
+						this.vx=0;
+						break;
+				}
+				//console.log(this.vx+"||"+this.vy+"||"+k);
+			}
+			con=false;
+		}
+		
+		square_obj.prototype={//方块的私有属性
+			draw:function(){//方块的绘制方法
+				ctx.beginPath();
+				this.num_w+=this.vx;
+				this.num_h+=this.vy;
+				//console.log(this.num_w+"||"+this.num_h);
+				ctx.rect(this.num_w,this.num_h,len,len);
+				ctx.fillStyle=this.fillstyle;
+				ctx.fill();
+			},
+			move_direction:function(para){//点击键盘上下左右时，改变移动方向,注意，贪吃蛇不能回头
+				switch (para){
+					case 39:
+						if(this.vx==-velocity){//之前的速度往左时，不做处理
+							break;
+						}else{
+							this.vx=velocity;//right
+							this.vy=0;
+						}
+						break;
+					case 37:
+						if(this.vx==velocity){
+							break;
+						}else{
+							this.vx=-(velocity);//left
+							this.vy=0
+							break;
+						}
+					case 40:
+						if(this.vy==-velocity){
+							break;
+						}else{
+							this.vy=velocity;//dowm
+							this.vx=0
+							break;
+						}
+					case 38:
+						if(this.vy==(velocity)){
+							break	
+						}else{
+							this.vy=-(velocity);//up
+							this.vx=0
+							break;
+						}
+				}
+			},
+			check_collision:function(){//判断是否撞到边上
+				if(this.num_w<0||this.num_w>(width-len)||this.num_h<0||this.num_h>(width-len)){
+					alert("Duang，游戏结束");
+					window.clearInterval(timer);
+				}
+			},
+			move_action:function(para){//移动到记录坐标时，进行转向
+				this.vx=para[2];
+				this.vy=para[3];
+			}
+		}
+		
+		function color(){//方块颜色
+			var R=Math.round(Math.random()*255);
+			var G=Math.round(Math.random()*255);
+			var B=Math.round(Math.random()*255);
+			if(R==51&&G==51&&B==51){//保证不和底色相同，其实还是有可能和底色相近，也分不清的情况
+				R=255;
+			}
+			var color="rgb("+R+","+G+","+B+")";
+			return color;
+		}
+
+		function crash(para1,para2,para3,para4,para5,para6,para7){//判断两滑块碰撞，需要参数包括7个（滑块1的x坐标、y坐标；滑块2的x坐标、y坐标,滑块边长,滑块移动方向）
+//			return !(para1+para5<para3||//没碰上返回false
+//					para2+para5<para4||
+//					para3+para5<para1||
+//					para4+para5<para2);
+			//这里相撞的情况判断有一些不同(俄罗斯方块也应该是使用这种方法)，一般情况下使用上述方法
+			return (para1==para3&&para2+para5==para4&&para7!==0)||(para2==para4&&para1+para5==para3&&para6!==0)||(para3==para1&&para4+para5==para2&&para7!==0)||(para4==para2&&para3+para5==para1&&para6!==0);
+		}
+		
+		function record(para){//当转向时，记录倒数第二块滑块的坐标和速度，存进数组。之后的滑块到达这个坐标时，继承速度。
+			var arr=[para.num_w,para.num_h,para.vx,para.vy];
+			if(record_arr.length>0){//数组有值的时候
+				var arr_end=record_arr[record_arr.length-1]//最后一个坐标信息
+				if(arr[0]==arr_end[0]&&arr[1]==arr_end[1]){//如果坐标值相同，则取代，防止在一个坐标上有多个速度
+					record_arr[record_arr.length-1]=arr;
+				}else{
+					record_arr.push(arr);
+				}
+			}else{
+				record_arr.push(arr);
+			}
+		}
+		
+		function turn_to(para1,para2){//判断转向,贪吃蛇不能回头
+			switch (para1){
+				case 39://right
+					if(para2.vy!==0){
+						return true
+					}else{
+						return false
+					}
+					break;
+				case 37://left
+					if(para2.vy!==0){
+						return true
+					}else{
+						return false
+					}
+					break;
+				case 40://dowm
+					if(para2.vx!==0){
+						return true
+					}else{
+						return false
+					}
+					break;
+				case 38://up
+					if(para2.vx!==0){
+						return true
+					}else{
+						return false
+					}
+					break;	
+				default:
+					break;
+			}
+		}
+	</script>
+</html>

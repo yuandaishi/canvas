@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<title>时钟插件编写</title>
+		<style type="text/css">
+			.box{
+				width: 800px;
+				height: 600px;
+				border: 1px gold solid;
+				margin: 0 auto;
+				/*color: coral;*/
+			}
+		</style>
+	</head>
+	<body>
+		<div class="box clock">
+			
+		</div>
+	</body>
+	<script src="js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/colok.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function(){
+			var clock=new Clock({//传过去的参数
+				type:"circle",//钟表类型目前支持circle
+				color:"blue",//钟表颜色
+				bgColor:"#cccccc",//钟表背景色
+				zeroColor:"coral",//钟表零秒时颜色
+				length:"200",//钟表半径，如果是矩形或者三角形，则是钟表边长
+				fontSize:"75"//字体大小
+			});
+		})
+	</script>
+</html>

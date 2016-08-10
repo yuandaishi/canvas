@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	</head>
+	<body>
+		<canvas id="canvas_1" width="500" height="500"></canvas>
+		<canvas id="canvas" width="500" height="500"></canvas><br />
+		红：<input type="text" name="red" id="red" value="" /><br />
+		蓝：<input type="text" name="blue" id="blue" value="" /><br />
+		绿：<input type="text" name="green" id="green" value="" /><br />
+		黑：<input type="text" name="black" id="black" value="" /><br />
+		粉：<input type="text" name="pink" id="pink" value="" /><br />
+		<a href="javascript:;" class="change">变换</a>
+	</body>
+	<script src="js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var canvas=$("#canvas")[0];
+		var canvas_1=$("#canvas_1")[0]
+		var ctx=canvas.getContext("2d");
+		var ctx_1=canvas_1.getContext("2d")
+		ctx_1.arc(250,250,150,0,Math.PI*2,true);
+		ctx_1.stroke();
+		ctx_1.beginPath();
+		ctx_1.arc(250,250,120,0,Math.PI*2,true);
+		ctx_1.fillStyle="#C09853"
+		ctx_1.fill();
+		//取值
+		$(".change").click(function(){
+			var redNum=Number($("#red").val());
+			var blueNum=Number($("#blue").val());
+			var greenNum=Number($("#green").val());
+			var blackNum=Number($("#black").val());
+			var pinkNum=Number($("#pink").val());
+			var total=redNum+blueNum+greenNum+blackNum+pinkNum;
+			console.log(total);
+			//计算百分比
+			var redPer=redNum/total;
+			var bluePer=blueNum/total;
+			var greenPer=greenNum/total;
+			var blackPer=blackNum/total;
+			var pinkPer=pinkNum/total;
+			//console.log(redPer);
+			ctx.beginPath();
+			ctx.sector(250,250,150,0,Math.PI*2*redPer,true);
+			ctx.fillStyle="red";
+			ctx.fill();
+			ctx.beginPath();
+			ctx.sector(250,250,150,Math.PI*2*redPer,Math.PI*2*redPer+Math.PI*2*bluePer,true);
+			ctx.fillStyle="blue";
+			ctx.fill();
+			ctx.beginPath();
+			ctx.sector(250,250,150,Math.PI*2*redPer+Math.PI*2*bluePer,Math.PI*2*redPer+Math.PI*2*bluePer+Math.PI*2*greenPer,true);
+			ctx.fillStyle="green";
+			ctx.fill();
+			ctx.beginPath();
+			ctx.sector(250,250,150,Math.PI*2*redPer+Math.PI*2*bluePer+Math.PI*2*greenPer,Math.PI*2*redPer+Math.PI*2*bluePer+Math.PI*2*greenPer+Math.PI*2*blackPer,true);
+			ctx.fillStyle="black";
+			ctx.fill();
+			ctx.beginPath();
+			ctx.sector(250,250,150,Math.PI*2*redPer+Math.PI*2*bluePer+Math.PI*2*greenPer+Math.PI*2*blackPer,Math.PI*2*redPer+Math.PI*2*bluePer+Math.PI*2*greenPer+Math.PI*2*blackPer+Math.PI*2*pinkPer,true);
+			ctx.fillStyle="pink";
+			ctx.fill();
+		})
+		//扇形
+		CanvasRenderingContext2D.prototype.sector = function (x, y, radius, sDeg, eDeg) {
+			// 初始保存
+			this.save();
+			// 位移到目标点
+			this.translate(x, y);
+			this.beginPath();
+			// 画出圆弧
+			this.arc(0,0,radius,sDeg, eDeg);
+			// 再次保存以备旋转
+			this.save();
+			// 旋转至起始角度
+			this.rotate(eDeg);
+			// 移动到终点，准备连接终点与圆心
+			this.moveTo(radius,0);
+			// 连接到圆心
+			this.lineTo(0,0);
+			// 还原
+			this.restore();
+			// 旋转至起点角度
+			this.rotate(sDeg);
+			// 从圆心连接到起点
+			this.lineTo(radius,0);
+			this.closePath();
+			// 还原到最初保存的状态
+			this.restore();
+			return this;
+		}
+	</script>
+</html>

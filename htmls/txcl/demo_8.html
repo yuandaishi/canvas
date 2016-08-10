@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			img {
+				display: block;
+				margin: 10px auto;
+			}
+			
+			#canvas {
+				border: 1px solid aquamarine;
+				margin: 20px auto;
+				display: block;
+			}
+			
+			#canvas_one {
+				border: 1px solid aquamarine;
+				margin: 20px auto;
+				display: block;
+			}
+		</style>
+	</head>
+
+	<body>
+		<canvas id="canvas" width="1000" height="600"></canvas>
+		<canvas id="canvas_one" width="500" height="500"></canvas>
+	</body>
+	<script src="jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var canvas = $("#canvas")[0];
+		var ctx = canvas.getContext("2d");
+		var img = new Image;
+		var con_one=true;
+		img.src = "1.jpg";
+		img.onload = function() {
+			ctx.drawImage(img, 0, 0);
+			var imgdata = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			//console.log(imgdata);
+			var pixdata = imgdata.data;
+			console.log(pixdata);
+			$("#canvas").click(function(e) {
+				var x_site = e.offsetX;
+				var y_site = e.offsetY;
+				console.log(x_site+"|||"+y_site);
+				var r = (Math.random() * 100 | 0) + 50; //消失的圆的半径
+				var v_cir=1;//每次消失圆环的内径
+				var angle=0;//起始角度
+				var angle_v=0.5;//圆环消失速率
+				var x_0=x_site+r*Math.sin(Math.PI/2+0);
+				var y_0=y_site+r*Math.cos(Math.PI/2+0);
+				if(con_one){
+					//ctx.moveTo(x_0,y_0);
+					pixdata[4*(canvas.width*(y_0-1)+x_0)+0]=255;
+					pixdata[4*(canvas.width*(y_0-1)+x_0)+1]=255;
+					pixdata[4*(canvas.width*(y_0-1)+x_0)+2]=255;
+					pixdata[4*(canvas.width*(y_0-1)+x_0)+3]=255;
+					var R = pixdata[4 * (500 * (y_0 - 1) + x_0) + 0];
+					var g = pixdata[4 * (500 * (y_0 - 1) + x_0) + 1];
+					var b = pixdata[4 * (500 * (y_0 - 1) + x_0) + 2];
+					var grey = r * 0.3 + g * 0.59 + b * 0.11;
+					pixdata[4 * (canvas.width* (y_0 - 1) + x_0) + 0] = grey;
+					pixdata[4 * (canvas.width * (y_0 - 1) + x_0) + 1] = grey;
+					pixdata[4 * (canvas.width * (y_0 - 1) + x_0) + 2] = grey;
+					con_one=false;
+					(function drawImg() { //每隔一个屏幕渲染周期执行一次该代码
+						stopImg = window.requestAnimationFrame(drawImg, canvas);
+						var x_1=x_site+r*Math.sin(Math.PI/2+angle)|0;
+						var y_1=y_site+r*Math.cos(Math.PI/2+angle)|0;
+						pixdata[4*(canvas.width*(y_1-1)+x_1)+0]=255;
+						pixdata[4*(canvas.width*(y_1-1)+x_1)+1]=255;
+						pixdata[4*(canvas.width*(y_1-1)+x_1)+2]=255;
+						pixdata[4*(canvas.width*(y_1-1)+x_1)+3]=255;
+						var R = pixdata[4 * (500 * (y_1 - 1) + x_1) + 0];
+						var g = pixdata[4 * (500 * (y_1 - 1) + x_1) + 1];
+						var b = pixdata[4 * (500 * (y_1 - 1) + x_1) + 2];
+						var grey = r * 0.3 + g * 0.59 + b * 0.11;
+						pixdata[4 * (canvas.width* (y_1 - 1) + x_1) + 0] = grey;
+						pixdata[4 * (canvas.width * (y_1 - 1) + x_1) + 1] = grey;
+						pixdata[4 * (canvas.width * (y_1 - 1) + x_1) + 2] = grey;
+						//ctx.lineTo(x_1,y_1);
+						//ctx_one.closePath();
+//						ctx.strokeStyle="aqua";
+//						ctx.stroke();
+						ctx.putImageData(imgdata,0,0);//整张图重绘，而不是重绘变成白色的部分，不是最好的效果
+						if(angle<2*Math.PI){
+							angle+=angle_v;
+						}else if(r>0){
+							r-=1;
+							//ctx.moveTo(x_site+r*Math.sin(Math.PI/2+0),y_site+r*Math.cos(Math.PI/2+0))
+							angle=0;
+						}else{
+							window.cancelAnimationFrame(stopImg);
+							con_one=true;
+						}
+	//					for (var i = x_site - r; i < x_site - r; i++) { //for循环中的语句在一个中期之中
+	//						var dy = Math.floor(Math.sqrt(r * r - i * i));
+	//						for (y = 250 - dy; y < 250 + dy; y++) { //纵坐标
+	//							//								pixdata[4*(500*(y-1)+x)+0]=255;
+	//							//								pixdata[4*(500*(y-1)+x)+1]=255;
+	//							//								pixdata[4*(500*(y-1)+x)+2]=255;
+	//							//								pixdata[4*(500*(y-1)+x)+3]=255;
+	//							var R = pixdata[4 * (500 * (y - 1) + x) + 0];
+	//							var g = pixdata[4 * (500 * (y - 1) + x) + 1];
+	//							var b = pixdata[4 * (500 * (y - 1) + x) + 2];
+	//							var grey = r * 0.3 + g * 0.59 + b * 0.11;
+	//							pixdata[4 * (500 * (y - 1) + x) + 0] = grey;
+	//							pixdata[4 * (500 * (y - 1) + x) + 1] = grey;
+	//							pixdata[4 * (500 * (y - 1) + x) + 2] = grey;
+	//						}
+	//					}
+						console.log(x_site+"|||"+y_site);
+					}())
+				}
+			})
+		}
+		//圆的画法(有正负值的关系，要学会运用角度，而不是坐标)
+//		var canvas_one=$("#canvas_one")[0];
+//		var ctx_one=canvas_one.getContext("2d");
+//		var r=150;
+//		var angle=0;
+//		var angle_v=0.05;
+//		var x_0=canvas_one.width/2+r*Math.sin(Math.PI/2+0);
+//		var y_0=canvas_one.height/2+r*Math.cos(Math.PI/2+0);
+//		ctx_one.beginPath();
+//		ctx_one.moveTo(x_0,y_0);
+//		(function drawArc(){
+//			var con=window.requestAnimationFrame(drawArc,canvas_one);
+//			var x_1=canvas_one.width/2+r*Math.sin(Math.PI/2+angle);
+//			var y_1=canvas_one.height/2+r*Math.cos(Math.PI/2+angle);
+//			ctx_one.lineTo(x_1,y_1);
+//			//ctx_one.closePath();
+//			ctx_one.strokeStyle="aqua";
+//			ctx_one.stroke();
+//			if(angle<2*Math.PI){
+//				angle+=angle_v;
+//			}else if(r<200){
+//				r+=1;
+//				angle=0;
+//			}
+//			//window.cancelAnimationFrame(con);
+//		})()
+	</script>
+
+</html>

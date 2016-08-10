@@ -1,0 +1,13 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+#canvas_1{
+	position: absolute;
+	top: 0;
+	border: 1px solid violet;
+}
+#canvas{
+	border: 1px solid violet;
+}

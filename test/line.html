@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>线条</title>
+	</head>
+	<body>
+		<canvas id="canvas" width="1000" height="800"></canvas>
+	</body>
+	<script src="../htmls/js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		$(function() {
+			var canvas = $("#canvas")[0];
+			var ctx = canvas.getContext("2d");
+			var dot = [
+				[80, 120],
+				[240, 240],
+				[355, 444],
+				[457, 256],
+				[133, 555],
+				[254, 166],
+				[366, 388],
+				[423, 666],
+				[633, 555],
+				[777, 666]
+			];
+			var slope_dot = [];
+			var k = dot.length;
+			var color = ["red", "blue", "pink", "green", "antiquewhite", "azure", "beige", "brown", "cornsilk", "darkmagenta"];
+			//console.log(k);
+			for (var i = 1; i < k; i++) {
+				slope = (dot[i][1] - dot[i - 1][1]) / (dot[i][0] - dot[i - 1][0]);
+				slope_dot.push(slope);
+			}
+			var l = slope_dot.length;
+			ctx.lineWidth = 3;
+			//console.log(slope_dot);
+			ctx.moveTo(dot[0][0], dot[0][1]);
+			var i=0;
+			(function draw() {
+				conditions = window.requestAnimationFrame(draw, canvas);
+				//console.log(i);
+				if (dot[i + 1][0] >= dot[i][0]) {
+					//console.log("heh");
+					var v = 1;
+					ctx.beginPath();
+					ctx.moveTo(dot[i][0], dot[i][1]);
+					dot[i][0] += v; //线条绘制速度；
+					dot[i][1] += slope_dot[i] * v;
+					//for(var j=dot[i][0];j<dot[i+1][0];j++){
+					ctx.lineTo(dot[i][0], dot[i][1]);
+					ctx.strokeStyle = color[i];
+					ctx.stroke();
+					//console.log(i);
+					if(dot[i][0]==dot[i+1][0]&&i<k){
+						i+=1;
+						ctx.beginPath();
+						ctx.arc(dot[i][0],dot[i][1],30,0,Math.PI*2,true);
+						ctx.stroke();
+					}
+					if(i>=k-1){
+						window.cancelAnimationFrame(conditions);//不在执行动画
+						//console.log("heheh");
+					}
+					//}
+				} else {
+					var v = -1;
+					ctx.beginPath();
+					ctx.moveTo(dot[i][0], dot[i][1]);
+					dot[i][0] += v; //线条绘制速度；
+					dot[i][1] += slope_dot[i] * v;
+					//for(var j=dot[i][0];j<dot[i+1][0];j++){
+					ctx.lineTo(dot[i][0], dot[i][1]);
+					ctx.strokeStyle = color[i];
+					ctx.stroke();
+					if(dot[i][0]==dot[i+1][0]&&i<k){
+						i+=1;
+						ctx.beginPath();
+						ctx.arc(dot[i][0],dot[i][1],50,0,Math.PI*2,true);
+						ctx.stroke();
+					}
+					if(i>=k-1){
+						window.cancelAnimationFrame(conditions);//不在执行动画
+						//console.log("heheh");
+					}
+				}
+			}())
+		})
+	</script>
+</html>
