@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+				/*cursor: pointer;*/
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="canvas" width="1200" height="900" style="display: block;margin: auto;background: antiquewhite;"></canvas>
+		<a href="javascript:;" class="effect_1">效果一</a>
+		<a href="javascript:;" class="effect_2">效果二</a>
+		<a href="javascript:;" class="effect_3">效果三</a>
+		<a href="javascript:;" class="effect_4">效果四</a>
+		<a href="javascript:;" class="effect_5">效果五</a>
+		<a href="javascript:;" class="effect_6">效果六</a>
+	</body>
+	<script src="js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		//核心：把数组pxdata的每4个值重新组成数组，并且获取到x，y坐标值，即重新组织每个像素点的RGBA值，并且加上每个像素点的坐标
+		//用ctx，react方法重新绘制每个像素，并且填充颜色
+		var canvas=$("#canvas")[0];
+		var ctx=canvas.getContext("2d");
+		var image=new Image();
+		var start_x=300;//图片放置起点x坐标
+		var start_y=50;//图片放置起点y坐标
+		var point_arr=[];//用来存放重新组织的点坐标
+		var spot_arr=[];//用来存放每个像素点的参数，包括rgba值及x,y坐标6个参数
+		var row=0;//一开始是第0行
+		var col=0;//一开始是第0列
+		var k=0;
+		image.src="img/0_03.png";
+		window.onload=function(){
+			ctx.drawImage(image,start_x,start_y);
+			var imageWid=image.width;
+			var imageHei=image.height;
+			//zconsole.log(imageWid+"||"+imageHei);
+			var imagedata=ctx.getImageData(start_x,start_y,image.width,image.height);
+			var pxdata=imagedata.data;
+			for(var i=0;i<pxdata.length/4;i++){//重组像素点参数，并加入x,y坐标（这个for语句是核心代码）
+				if(i!==0&&(i%imageWid==0)){//除以宽度余数为0的时候，表示换行（整除常用到换行这些地方）
+					row+=1;//行数加1
+					col=0;//重新回到第0列	
+				}
+				spot_arr=[pxdata[4*i+0],pxdata[4*i+1],pxdata[4*i+2],pxdata[4*i+3],start_x+col,start_y+row];
+				point_arr.push(spot_arr);
+				col+=1;
+			}
+			$(".effect_1").click(function(){
+				effect_1();
+			})
+			$(".effect_2").click(function(){
+				effect_2();
+			})
+			$(".effect_3").click(function(){
+				effect_3();
+			})
+		}
+		
+		function effect_1(){//点击之后，每隔N个点，就让点透明
+			ctx.clearRect(0,0,1200,900);//清除画布
+			for(var i=0;i<point_arr.length;i+=30){
+				ctx.beginPath();
+				ctx.fillStyle="rgba("+point_arr[i][0]+","+point_arr[i][1]+","+point_arr[i][2]+","+point_arr[i][3]+")";
+				ctx.fillRect(point_arr[i][4],point_arr[i][5],1,1)
+			}
+		}
+		
+		
+		function effect_2(){//显示的点数随机
+			ctx.clearRect(0,0,1200,900);
+			var k=Math.random()*5|0
+			for(var i=0;i<point_arr.length;i+=k){
+				ctx.beginPath();
+				ctx.fillStyle="rgba("+point_arr[i][0]+","+point_arr[i][1]+","+point_arr[i][2]+","+point_arr[i][3]+")";
+				ctx.fillRect(point_arr[i][4],point_arr[i][5],1,1)
+				k=Math.random()*5|0;
+			}
+		}
+		
+		function effect_3(){//点击时显示图片
+			$("#canvas")[0].style.cursor="pointer";
+			ctx.clearRect(0,0,1200,900);
+			var k=Math.random()*50|0
+			for(var i=0;i<point_arr.length;i+=k){
+				ctx.beginPath();
+				ctx.fillStyle="rgba("+point_arr[i][0]+","+point_arr[i][1]+","+point_arr[i][2]+","+point_arr[i][3]+")";
+				ctx.fillRect(point_arr[i][4],point_arr[i][5],1,1)
+				k=Math.random()*50|0;
+			}
+			var r=30;//圆半径，圆方程(x－a)²+(y－b)²=r²
+			$("#canvas").click(function(e){
+				var x=e.offsetX;
+				var y=e.offsetY;
+				//console.log(x+"||"+y);
+				for(var i=0;i<point_arr.length;i++){
+					var con=(point_arr[i][4]-x)*(point_arr[i][4]-x)+(point_arr[i][5]-y)*(point_arr[i][5]-y);
+					if(con<r*r){
+						ctx.fillStyle="rgba("+point_arr[i][0]+","+point_arr[i][1]+","+point_arr[i][2]+","+point_arr[i][3]+")";
+						ctx.fillRect(point_arr[i][4],point_arr[i][5],1,1)
+					}
+				}
+			})
+		}
+	</script>
+</html>
